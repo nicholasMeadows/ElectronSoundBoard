@@ -1,0 +1,69 @@
+<div>
+    <mat-accordion>
+        <mat-expansion-panel *ngIf="hasFavorites()">
+            <mat-expansion-panel-header>
+                <mat-panel-title>Favorites</mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-accordion>
+
+                <mat-expansion-panel *ngFor="let category of getFavoritesCategory()">
+                    <mat-expansion-panel-header>{{category}}</mat-expansion-panel-header>
+
+                    <div fxLayout="row wrap" fxLayoutGap="10px grid">
+                        <div *ngFor="let soundcard of soundcards" style="margin-bottom: 10px;"
+                            [ngStyle]="{'display': soundcard.isFavorite && soundcard.category == category ? '':'none'}">
+                            <app-soundcard *ngIf="soundcard.isFavorite && soundcard.category == category"
+                                (isFavoriteChangeEvent)="isFavoriteChanged($event)"
+                                (showOnStreamDeckChangeEvent)="showOnStreamDeckChanged($event)"
+                                (volumeChanges)="volumeChanged($event)"
+                                (startPlayingClicked)="startPlayingClicked($event)"
+                                (stopPlayingClicked)="stopPlayingClicked($event)" [soundcard]="soundcard">
+                            </app-soundcard>
+                        </div>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </mat-expansion-panel>
+
+
+        <mat-expansion-panel *ngIf="hasStreamDeckItems()">
+            <mat-expansion-panel-header>
+                <mat-panel-title>Stream Deck</mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-accordion>
+                <mat-expansion-panel *ngFor="let category of getStreamDeckCategory()">
+                    <mat-expansion-panel-header>{{category}}</mat-expansion-panel-header>
+                    <div fxLayout="row wrap" fxLayoutGap="10px grid">
+                        <div *ngFor="let soundcard of soundcards" style="margin-bottom: 10px;"
+                            [ngStyle]="{'display': soundcard.showOnStreamDeck && soundcard.category == category ? '':'none'}">
+                            <app-soundcard *ngIf="soundcard.showOnStreamDeck && soundcard.category == category"
+                                (isFavoriteChangeEvent)="isFavoriteChanged($event)"
+                                (showOnStreamDeckChangeEvent)="showOnStreamDeckChanged($event)"
+                                (volumeChanges)="volumeChanged($event)"
+                                (startPlayingClicked)="startPlayingClicked($event)"
+                                (stopPlayingClicked)="stopPlayingClicked($event)" [soundcard]="soundcard">
+                            </app-soundcard>
+                        </div>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </mat-expansion-panel>
+
+
+        <mat-expansion-panel *ngFor="let category of getCategories()">
+            <mat-expansion-panel-header>
+                <mat-panel-title>{{category}}</mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <div fxLayout="row wrap" fxLayoutGap="10px grid">
+                <div *ngFor="let soundcard of soundcards" style="margin-bottom: 10px;"
+                    [ngStyle]="{'display': soundcard.category == category ? '':'none'}">
+                    <app-soundcard *ngIf="soundcard.category == category" (isFavoriteChangeEvent)="isFavoriteChanged($event)"
+                        (showOnStreamDeckChangeEvent)="showOnStreamDeckChanged($event)"
+                        (volumeChanges)="volumeChanged($event)" (startPlayingClicked)="startPlayingClicked($event)"
+                        (stopPlayingClicked)="stopPlayingClicked($event)" [soundcard]="soundcard"></app-soundcard>
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>

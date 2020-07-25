@@ -1,0 +1,10 @@
+<mat-card
+    [ngStyle]="{'background-color': soundcard.isCurrentlyPlaying ? 'green' : 'lightgrey'}"
+    style="width: 200px; ">
+    <mat-card-title>{{soundcard.title}}</mat-card-title>
+    <p>Favorite <input type="checkbox" (change)="isFavoriteChange()" [(ngModel)]="soundcard.isFavorite" ></p>
+    <p>Show On Streamdeck: <input type="checkbox" (change)="showOnStreamDeckChange()" [(ngModel)]="soundcard.showOnStreamDeck" ></p>
+    <p>current volumen: <mat-slider min="0" max="1" step="0.1" (change)="volumeChanged()" [(ngModel)]="soundcard.currentVolume"></mat-slider>
+    </p>
+    <button (click)="soundButtonClicked()">{{soundcard.isCurrentlyPlaying ? 'Stop': 'Play'}}</button>
+</mat-card>
