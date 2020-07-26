@@ -111,4 +111,6 @@ dist
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
 
+#Electron package build
+SoundBoard-win32-x64/
 # End of https://www.toptal.com/developers/gitignore/api/node
