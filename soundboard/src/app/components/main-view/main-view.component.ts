@@ -15,7 +15,7 @@ import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@an
 export class MainViewComponent implements OnInit {
   soundcards: SoundCard[] = [];
   currentlyPlayingCard: SoundCard;
-
+  runTimeId: number = 0;
   constructor(private cd: ChangeDetectorRef, private settingsService: SettingsService, private ipcService: IpcService, private audioService: AudioService) { }
 
   ngOnInit(): void {
@@ -60,23 +60,28 @@ export class MainViewComponent implements OnInit {
 
     this.settingsService.getConfig().subscribe(config => {
       let soundcards = config.soundCards;
-      let runTimeId = 0;
+      
 
       soundcards.forEach(soundcard => {
-        soundcard.runTimeId = runTimeId;
-        runTimeId++;
+        soundcard.isCurrentlyPlaying = false;
+        soundcard.runTimeId = this.runTimeId;
+        this.runTimeId++;
       });
-
-      soundcards.sort((soundcard1, soundcard2) => {
-        if (soundcard1.title > soundcard2.title) {
-          return 1;
-        } else if (soundcard1.title < soundcard2.title) {
-          return -1;
-        }
-        return 0;
-      });
+      
+      this.sortSoundCards(soundcards);
 
       this.soundcards = soundcards;
+    });
+  }
+
+  sortSoundCards(soundcards:SoundCard[]){
+    soundcards.sort((soundcard1, soundcard2) => {
+      if (soundcard1.title > soundcard2.title) {
+        return 1;
+      } else if (soundcard1.title < soundcard2.title) {
+        return -1;
+      }
+      return 0;
     });
   }
 
@@ -133,6 +138,16 @@ export class MainViewComponent implements OnInit {
       return 0;
     });;
     return favoritesCategory;
+  }
+
+  handelCardsAdded(soundCardsToAdd: SoundCard[]) {
+    soundCardsToAdd.forEach(card => {
+      card.runTimeId = this.runTimeId;
+      this.runTimeId++;
+    });
+    this.soundcards.push(...soundCardsToAdd);
+    this.updateConfig();
+    this.sortSoundCards(this.soundcards);
   }
 
 

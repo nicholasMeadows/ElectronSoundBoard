@@ -107,6 +107,7 @@ function writeConfigFile(configObjToWrite){
 
 // let currentAudioDeviceId='';
 //IPC Events!!!
+
 ipcMain.on('config:loadConfig', (event, args)=> {
   let config = readConfigFile();
   event.reply('config:loadConfigResponse', config);
@@ -173,3 +174,10 @@ ipcMain.on("audio:audiofinished", (event, soundCard) => {
 ipcMain.on("audio:volumechange", (event, volumeToSet) => {
   win.webContents.send("audio:volumechange", volumeToSet);
 });
+
+ipcMain.on("file:checkIfFileExists", (event, fileToCheck) => {
+  fs.exists(fileToCheck, (exists)=> {
+    console.log("main.js", exists);
+    event.sender.send("file:checkIfFileExistsResponse", exists);
+  }); 
+})

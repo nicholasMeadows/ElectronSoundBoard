@@ -1,0 +1,30 @@
+<div>
+    <button mat-raised-button color="primary" style="margin-bottom: 10px;" (click)="addExtraSoundcard()"><mat-icon>add</mat-icon>Add</button>
+</div>
+<div fxLayout="column" fxLayoutGap="10px" style="height: 300px; overflow-x: hidden; overflow-y: scroll;">
+    <mat-card style="background-color: lightgrey;" *ngFor="let soundCardWithValidation of soundCardWithValidationArr; let currentIndex = index">
+
+        <label>Title: </label><br>
+        <input id="text" #title="ngModel" type="text" style="width: 100%" [(ngModel)]="soundCardWithValidation.title" />
+        <i *ngIf="!validateTitleField(soundCardWithValidation, title) && (title.dirty || title.touched)" class="errorSpan" >{{soundCardWithValidation.titleInvalidMessage}}</i>
+        <br>
+
+        <label>Category: </label><br>
+        <input type="text" #category="ngModel" name="category" style="width: 100%" [(ngModel)]="soundCardWithValidation.category" />
+        <i *ngIf="!validateCategoryField(soundCardWithValidation) && (category.dirty || category.touched)" class="errorSpan" >{{soundCardWithValidation.categoryInvalidMessage}}</i>
+        <br>
+
+        <label>File: </label><br>
+        <!-- (keyup)="validateSoundFileField(soundCardWithValidation)" -->
+        <input type="text" #soundFilePath="ngModel" name="soundFilePath" style="width: 100%" (keyup)="validateSoundFile(soundCardWithValidation)" [(ngModel)]="soundCardWithValidation.soundFilePath" />
+        <!-- <i *ngIf="(!validateSoundFileField(soundCardWithValidation) || !soundCardWithValidation.isSoundFileValid) && (soundFilePath.dirty || soundFilePath.touched) " class="errorSpan" >{{soundCardWithValidation.soundFileInvalidMessage}}</i> -->
+        <i *ngIf="(isSoundFildFieldEmpty(soundCardWithValidation) || !soundCardWithValidation.isSoundFileValid) && (soundFilePath.dirty || soundFilePath.touched)"  class="errorSpan" >{{soundCardWithValidation.soundFileInvalidMessage}}</i>
+        
+        <button mat-raised-button color="warn" style="float: right; margin-top: 10px" (click)="removeCardFromList(soundCardWithValidation,currentIndex)">Delete</button>
+    </mat-card>
+</div>
+
+<div style="margin-top: 10px;">
+    <button mat-raised-button color="primary" [mat-dialog-close]="getSoundCardArrForSubmission()" cdkFocusInitial [disabled]="!canSubmit()">Ok</button>
+    <button mat-raised-button (click)="onCancelClick()">Cancel</button>
+</div>

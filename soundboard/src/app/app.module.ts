@@ -43,11 +43,15 @@ import { MatTreeModule } from '@angular/material/tree';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
+import { AddNewSoundcardButtonComponent } from './components/add-new-soundcard/add-new-soundcard-button.component';
+import { AddNewSoundcardDialogComponent } from './components/add-new-soundcard-dialog/add-new-soundcard-dialog.component';
 @NgModule({
   declarations: [
     AppComponent,
     MainViewComponent,
-    SoundcardComponent
+    SoundcardComponent,
+    AddNewSoundcardButtonComponent,
+    AddNewSoundcardDialogComponent
   ],
   imports: [
     BrowserModule,
