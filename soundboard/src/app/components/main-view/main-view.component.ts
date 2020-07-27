@@ -21,6 +21,24 @@ export class MainViewComponent implements OnInit {
   ngOnInit(): void {
     this.loadAudioDevices();
     this.loadData();
+
+    this.ipcService.getStreamDeckStartAudio().subscribe(soundCard => {
+      console.log("Stream deck start", soundCard);
+      let filteredSoundCards = this.soundcards.filter(sc => sc.runTimeId == soundCard.runTimeId);
+      if (filteredSoundCards.length > 0) {
+        console.log("Found soundCards", filteredSoundCards);
+        this.startPlayingClicked(filteredSoundCards[0]);
+      }
+
+    });
+
+    this.ipcService.getStreamDeckStopAudio().subscribe(soundCard => {
+      console.log("Stream deck stop", soundCard);
+      let filteredSoundCards = this.soundcards.filter(sc => sc.runTimeId == soundCard.runTimeId);
+      if (filteredSoundCards.length > 0) {
+        this.stopPlayingClicked(filteredSoundCards[0]);
+      }
+    });
   }
 
   loadAudioDevices() {
@@ -60,21 +78,22 @@ export class MainViewComponent implements OnInit {
 
     this.settingsService.getConfig().subscribe(config => {
       let soundcards = config.soundCards;
-      
+
 
       soundcards.forEach(soundcard => {
         soundcard.isCurrentlyPlaying = false;
         soundcard.runTimeId = this.runTimeId;
         this.runTimeId++;
       });
-      
-      this.sortSoundCards(soundcards);
 
+      this.sortSoundCards(soundcards);
       this.soundcards = soundcards;
+      this.updateConfig();
+      this.ipcService.sendData("streamdeck:initwebsocket", null);
     });
   }
 
-  sortSoundCards(soundcards:SoundCard[]){
+  sortSoundCards(soundcards: SoundCard[]) {
     soundcards.sort((soundcard1, soundcard2) => {
       if (soundcard1.title > soundcard2.title) {
         return 1;
@@ -157,8 +176,10 @@ export class MainViewComponent implements OnInit {
       this.ipcService.sendData("audio:stopPlaying", this.currentlyPlayingCard);
     }
     this.currentlyPlayingCard = soundCard;
+    this.currentlyPlayingCard.isCurrentlyPlaying = true;
     console.log("Audio start");
     this.ipcService.sendData("audio:startPlaying", soundCard);
+    this.cd.detectChanges();
   }
 
   stopPlayingClicked(soundCard: SoundCard) {
@@ -166,6 +187,7 @@ export class MainViewComponent implements OnInit {
     this.currentlyPlayingCard = undefined;
     console.log("Audio stop");
     this.ipcService.sendData("audio:stopPlaying", soundCard);
+    this.cd.detectChanges();
   }
 
   isFavoriteChanged(soundCard: SoundCard) {
@@ -174,6 +196,7 @@ export class MainViewComponent implements OnInit {
 
   showOnStreamDeckChanged(soundCard: SoundCard) {
     this.updateConfig();
+    this.ipcService.sendData("streamdeck:updatecards", null);
   }
 
   volumeChanged(soundCard: SoundCard) {

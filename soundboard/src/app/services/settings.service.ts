@@ -10,6 +10,8 @@ import { Config } from '../models/config';
 })
 export class SettingsService {
 
+  
+
 
   constructor(private ipcService: IpcService) { }
 

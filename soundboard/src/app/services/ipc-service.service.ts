@@ -63,4 +63,20 @@ export class IpcService {
       this.ipc.send('file:checkIfFileExists', soundFile);
     });
   }
+
+  getStreamDeckStartAudio():Observable<SoundCard> {
+    return new Observable(obs => {
+      this.ipc.on("streamdeckstartaudio", (event, soundCard) => {
+        obs.next(soundCard);
+      });
+    })
+  }
+
+  getStreamDeckStopAudio():Observable<SoundCard> {
+    return new Observable(obs => {
+      this.ipc.on("streamdeckstopaudio", (event, soundCard) => {
+        obs.next(soundCard);
+      });
+    })
+  }
 }
