@@ -27,7 +27,7 @@ class CustomWebSocket {
     }
 
     processMessage(message) {
-        console.log('received: %s', message);
+        console.log('received: %s from streamdeck', message);
         if (undefined != message && undefined != message.eventType) {
             
             switch (message.eventType.toLowerCase()) {

@@ -98,7 +98,6 @@ export class AddNewSoundcardDialogComponent implements OnInit {
   }
 
   onCancelClick() {
-    console.log(this.soundCardWithValidationArr);
     this.dialogRef.close();
   }
 }

@@ -19,7 +19,13 @@ export class MainViewComponent implements OnInit {
   constructor(private cd: ChangeDetectorRef, private settingsService: SettingsService, private ipcService: IpcService, private audioService: AudioService) { }
 
   ngOnInit(): void {
-    this.loadAudioDevices();
+    this.audioService.getAudioFinishedSubscription().subscribe(soundCard => {
+      console.log("Audio Finished Subscription")
+      this.currentlyPlayingCard = undefined;
+      this.findSoundCardAndSetIsPlaying(soundCard);
+      this.ipcService.sendData("streamdeck:stopplaying", soundCard);
+    });
+
     this.loadData();
 
     this.ipcService.getStreamDeckStartAudio().subscribe(soundCard => {
@@ -39,17 +45,6 @@ export class MainViewComponent implements OnInit {
         this.stopPlayingClicked(filteredSoundCards[0]);
       }
     });
-  }
-
-  loadAudioDevices() {
-    this.audioService.getAudioOutputDevices().subscribe(deviceArray => {
-      this.ipcService.sendData("audiodevice:audiodevicelist", deviceArray);
-    });
-
-    this.ipcService.getAudioFinishedSubscription().subscribe(soundCard => {
-      this.currentlyPlayingCard = undefined;
-      this.findSoundCardAndSetIsPlaying(soundCard);
-    })
   }
 
   loadData() {
@@ -173,20 +168,25 @@ export class MainViewComponent implements OnInit {
   startPlayingClicked(soundCard: SoundCard) {
     if (undefined !== this.currentlyPlayingCard) {
       this.currentlyPlayingCard.isCurrentlyPlaying = false;
-      this.ipcService.sendData("audio:stopPlaying", this.currentlyPlayingCard);
+      this.audioService.audioStopPlaying(this.currentlyPlayingCard);
+      this.ipcService.sendData("streamdeck:stopplaying", this.currentlyPlayingCard);
+      
     }
     this.currentlyPlayingCard = soundCard;
     this.currentlyPlayingCard.isCurrentlyPlaying = true;
     console.log("Audio start");
-    this.ipcService.sendData("audio:startPlaying", soundCard);
+    this.audioService.audioStartPlaying(soundCard);
+    this.ipcService.sendData("streamdeck:startplaying", this.currentlyPlayingCard);
     this.cd.detectChanges();
   }
 
   stopPlayingClicked(soundCard: SoundCard) {
     this.currentlyPlayingCard.isCurrentlyPlaying = false;
+    this.ipcService.sendData("streamdeck:stopplaying", this.currentlyPlayingCard);
     this.currentlyPlayingCard = undefined;
     console.log("Audio stop");
-    this.ipcService.sendData("audio:stopPlaying", soundCard);
+    this.audioService.audioStopPlaying(soundCard);
+    
     this.cd.detectChanges();
   }
 
@@ -202,7 +202,7 @@ export class MainViewComponent implements OnInit {
   volumeChanged(soundCard: SoundCard) {
     this.updateConfig();
     if (soundCard.isCurrentlyPlaying) {
-      this.ipcService.sendData("audio:volumechange", soundCard.currentVolume);
+      this.audioService.audioVolumeChanged(soundCard.currentVolume);
     }
   }
 

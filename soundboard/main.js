@@ -93,39 +93,6 @@ if (process.env.NODE_ENV != 'production') {
   })
 }
 
-
-
-
-
-
-/*
-function updateSoundCardsInConfig(soundcards) {
-  let configObj = readConfigFile();
-  configObj.soundCards = soundcards;
-  writeConfigFile(configObj);
-}
-
-function updateAudioDeviceIdInConfig(deviceId) {
-  let configObj = readConfigFile();
-  configObj.audioDeviceId = deviceId;
-  writeConfigFile(configObj);
-}
-
-function readConfigFile() {
-  return JSON.parse(fs.readFileSync('config.json'));
-}
-
-function writeConfigFile(configObjToWrite){
-  fs.writeFileSync('config.json', JSON.stringify(configObjToWrite));
-}
-*/
-
-
-
-
-
-
-
 function startPlayingAudio(soundCard){
   win.webContents.send("streamdeckstartaudio", soundCard);
 }
@@ -134,9 +101,10 @@ function stopPlayingAudio(soundCard){
   win.webContents.send("streamdeckstopaudio", soundCard);
 }
 
-// let currentAudioDeviceId='';
-//IPC Events!!!
 
+
+
+//IPC Events!!!
 ipcMain.on('config:loadConfig', (event, args)=> {
   let config = configUtil.readConfigFile();
   event.reply('config:loadConfigResponse', config);
@@ -145,7 +113,6 @@ ipcMain.on('config:loadConfig', (event, args)=> {
 ipcMain.on('config:updateConfig', (event, soundcards) => {
   configUtil.updateSoundCardsInConfig(soundcards);
 });
-
 
 ipcMain.on("audiodevice:audiodevicelist", (event, args) => {
   let audioDeviceSubMenu = [];
@@ -187,36 +154,12 @@ ipcMain.on("audiodevice:audiodevicelist", (event, args) => {
   Menu.setApplicationMenu(menu);
 });
 
-let ipcMessageEvent;
-ipcMain.on("audio:startPlaying", (event, soundCard) => {
-  ipcMessageEvent = event;
-  streamDeckWebSocket.soundStartedPlaying(soundCard);
-  win.webContents.send("audio:startplaying", soundCard)
-  // startPlayingAudio(soundCard);
-})
-
-ipcMain.on("audio:stopPlaying", (event, soundCard) => {
-  streamDeckWebSocket.soundStoppedPlaying(soundCard);
-  win.webContents.send("audio:stopplaying");
-  // stopPlayingAudio(soundCard);
-})
-
-ipcMain.on("audio:audiofinished", (event, soundCard) => {
-  streamDeckWebSocket.soundStoppedPlaying(soundCard);
-  ipcMessageEvent.sender.send("audio:audiofinishedTest", soundCard)
-});
-
-ipcMain.on("audio:volumechange", (event, volumeToSet) => {
-  win.webContents.send("audio:volumechange", volumeToSet);
-});
-
 ipcMain.on("file:checkIfFileExists", (event, fileToCheck) => {
   fs.exists(fileToCheck, (exists)=> {
     console.log("main.js", exists);
     event.sender.send("file:checkIfFileExistsResponse", exists);
   }); 
 });
-
 
 //Stream deck ipc events
 ipcMain.on("streamdeck:initwebsocket", (event, nullData) =>{
@@ -225,4 +168,11 @@ ipcMain.on("streamdeck:initwebsocket", (event, nullData) =>{
 
 ipcMain.on("streamdeck:updatecards", (nullData)=>{
   streamDeckWebSocket.sendConfigToStreamDeck();
+});
+
+ipcMain.on("streamdeck:startplaying", (event, soundCard)=>{
+  streamDeckWebSocket.soundStartedPlaying(soundCard);
+});
+ipcMain.on("streamdeck:stopplaying", (event, soundCard)=>{
+  streamDeckWebSocket.soundStoppedPlaying(soundCard);
 });

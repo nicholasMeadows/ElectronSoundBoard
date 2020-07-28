@@ -46,14 +46,6 @@ export class IpcService {
     });
   }
 
-  getAudioFinishedSubscription(): Observable<SoundCard>{
-    return new Observable<SoundCard>((obs) => {
-      this.ipc.on("audio:audiofinishedTest", (event, soundCard) => {
-        obs.next(soundCard);
-      })
-    })
-  }
-
   checkIfSoundFileIsvalid(soundFile: string): Observable<boolean>{
     return new Observable(obs => {
       this.ipc.once('file:checkIfFileExistsResponse', (event, result) => {

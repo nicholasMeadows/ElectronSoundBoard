@@ -12,48 +12,14 @@
 </head>
 
 <body class="mat-typography">
-  <audio id="audioPlayer"></audio>
   <app-root></app-root>
-
   <script>
     const electron = require('electron');
     const { ipcRenderer } = electron;
 
-    let audioPlayer = document.getElementById('audioPlayer');
-
-    let soundCard;
-    // audioPlayer.src = "D:\\GitProjects\\ElectronSoundBoard\\soundboard\\Seagulls_Stop_It_Now.mp3";
-
     ipcRenderer.on("audiodevice:updatecurrentdevice", (event, deviceId) => {
-      audioPlayer.setSinkId(deviceId);
+      document.getElementById("audioPlayer").setSinkId(deviceId);
     });
-
-
-
-    ipcRenderer.on("audio:startplaying", (event, sound) => {
-      audioPlayer.src = sound.soundFilePath;
-      audioPlayer.volume = sound.currentVolume;
-      soundCard = sound;
-
-      audioPlayer.addEventListener("ended", audioEndedEvent);
-      audioPlayer.play();
-    });
-
-    function audioEndedEvent() {
-        // console.log("Audio Ended", soundCard)
-        ipcRenderer.send("audio:audiofinished", soundCard);
-    }
-
-
-    ipcRenderer.on("audio:stopplaying", (event, soundCard) => {
-      console.log("Audio should stop")
-      audioPlayer.pause();
-      audioPlayer.currentTime = 0;
-    });
-
-    ipcRenderer.on("audio:volumechange", (event, volumeToSet) => {
-      audioPlayer.volume = volumeToSet;
-    })
   </script>
 </body>
 

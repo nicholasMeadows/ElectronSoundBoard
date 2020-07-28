@@ -45,13 +45,15 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
 import { AddNewSoundcardButtonComponent } from './components/add-new-soundcard/add-new-soundcard-button.component';
 import { AddNewSoundcardDialogComponent } from './components/add-new-soundcard-dialog/add-new-soundcard-dialog.component';
+import { AudioPlayerComponent } from './components/audio-player/audio-player.component';
 @NgModule({
   declarations: [
     AppComponent,
     MainViewComponent,
     SoundcardComponent,
     AddNewSoundcardButtonComponent,
-    AddNewSoundcardDialogComponent
+    AddNewSoundcardDialogComponent,
+    AudioPlayerComponent
   ],
   imports: [
     BrowserModule,
