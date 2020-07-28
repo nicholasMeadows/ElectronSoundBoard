@@ -2,6 +2,11 @@
   "name": "soundboard",
   "version": "0.0.0",
   "main": "main.js",
+  "build":{
+    "extraResources":[
+      {"from":"appIcon.png","to": "appIcon.png"}
+    ]
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -11,7 +16,7 @@
     "e2e": "ng e2e",
     "electron": "electron .",
     "electron-build": "ng build --prod && electron .",
-    "package-windows": "electron-packager ./ SoundBoard --platform=win32 --arch=x64"
+    "package-windows": "electron-packager ./ SoundBoard --platform=win32 --arch=x64 --overwrite"
   },
   "private": true,
   "dependencies": {
@@ -30,7 +35,8 @@
     "jquery": "^3.5.1",
     "rxjs": "~6.5.5",
     "tslib": "^2.0.0",
-    "zone.js": "~0.10.3"
+    "zone.js": "~0.10.3",
+    "ws": "^7.3.1"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.1000.4",
@@ -52,6 +58,7 @@
     "protractor": "~7.0.0",
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",
-    "typescript": "^3.9.7"
+    "typescript": "^3.9.7",
+    "ws": "^7.3.1"
   }
 }

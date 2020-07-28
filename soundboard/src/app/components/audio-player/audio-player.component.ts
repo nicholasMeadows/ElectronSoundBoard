@@ -1,6 +1,6 @@
 import { SoundCard } from './../../models/soundcard';
 import { AudioService } from './../../services/audio.service';
-import { IpcService } from './../../../../SoundBoard-win32-x64/resources/app/src/app/services/ipc-service.service';
+import { IpcService } from '../../services/ipc-service.service';
 import { Component, OnInit, ViewChild, ElementRef, Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 

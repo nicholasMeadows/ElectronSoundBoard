@@ -1,11 +1,11 @@
 const CustomWebSocket = require('./StreamDeckWebSocket.ts');
 const ConfigUtil = require('./ConfigUtil.ts');
 
-
 let configUtil = new ConfigUtil();
 
 let fs = require('fs');
-const { app, BrowserWindow, Menu, ipcMain, IpcMessageEvent } = require('electron')
+const { app, BrowserWindow, Menu, ipcMain, IpcMessageEvent } = require('electron');
+const { pathToFileURL } = require('url');
 
 let streamDeckWebSocket = new CustomWebSocket(configUtil, startPlayingAudio, stopPlayingAudio);
 
@@ -13,13 +13,16 @@ let audioMenuLabel = 'Audio Devices';
 
 let win;
 
+//Working
+// icon: __dirname + "\\appIcon.png",
+
 function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
     width: 1200,
     height: 800,
     backgroundColor: '#ffffff',
-    icon: 'appIcon.png',
+    icon: __dirname + "\\appIcon.png",
     webPreferences: {
       nodeIntegration: true
     }

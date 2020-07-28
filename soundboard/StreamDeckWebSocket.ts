@@ -2,6 +2,7 @@
 const Socket = require('ws');
 
 class CustomWebSocket {
+    wss;
     ws;
     configUtil;
     startPlayingAudio;
@@ -14,16 +15,21 @@ class CustomWebSocket {
     }
 
     createWebSocket() {
-        let wss = new Socket.Server({ port: 1234 });
-
-
-        wss.on("connection", (ws) => {
-            this.ws = ws;
-            this.sendConfigToStreamDeck();
-            ws.on("message", (message) => {
-                this.processMessage(JSON.parse(message));
+        if(undefined == this.wss){
+            this.wss = new Socket.Server({ port: 1234 });
+            this.wss.on("connection", (ws) => {
+                this.ws = ws;
+                this.sendConfigToStreamDeck();
+                ws.on("message", (message) => {
+                    this.processMessage(JSON.parse(message));
+                });
             });
-        });
+        } else {
+            if(undefined != this.ws){
+                this.sendConfigToStreamDeck();
+            }
+        }
+        
     }
 
     processMessage(message) {
