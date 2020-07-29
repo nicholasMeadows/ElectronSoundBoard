@@ -1,3 +1,5 @@
+import { DeleteSoundcardDialogComponent } from './../delete-soundcard-dialog/delete-soundcard-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 import { SoundCard } from './../../models/soundcard';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
@@ -26,7 +28,10 @@ export class SoundcardComponent implements OnInit {
   @Output()
   showOnStreamDeckChangeEvent: EventEmitter<SoundCard> = new EventEmitter<SoundCard>();
 
-  constructor() { }
+  @Output()
+  deleteSoundCard: EventEmitter<SoundCard> = new EventEmitter();
+
+  constructor(public dialog: MatDialog) { }
 
   ngOnInit(): void {
   }
@@ -51,5 +56,20 @@ export class SoundcardComponent implements OnInit {
 
   volumeChanged() {
     this.volumeChanges.emit(this.soundcard);
+  }
+
+  handleDeleteClicked(){
+    const dialogRef = this.dialog.open(DeleteSoundcardDialogComponent, {width: '300px', data:this.soundcard});
+    dialogRef.afterClosed().subscribe(shouldDelete => {
+      // if(undefined == cardsToAdd){
+      // console.log('Dialog was closed with no results')
+      // } else {
+      //   this.cardsAdded.emit(cardsToAdd);
+      // }
+      console.log("Should Delete?", shouldDelete);
+      if(shouldDelete){
+        this.deleteSoundCard.emit(this.soundcard);
+      }
+    })
   }
 }

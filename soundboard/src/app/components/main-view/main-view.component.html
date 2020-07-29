@@ -13,7 +13,7 @@
                     <div fxLayout="row wrap" fxLayoutGap="10px grid">
                         <div *ngFor="let soundcard of soundcards" style="margin-bottom: 10px;"
                             [ngStyle]="{'display': soundcard.isFavorite && soundcard.category == category ? '':'none'}">
-                            <app-soundcard *ngIf="soundcard.isFavorite && soundcard.category == category"
+                            <app-soundcard (deleteSoundCard)="handleDeleteSoundCard($event)" *ngIf="soundcard.isFavorite && soundcard.category == category"
                                 (isFavoriteChangeEvent)="isFavoriteChanged($event)"
                                 (showOnStreamDeckChangeEvent)="showOnStreamDeckChanged($event)"
                                 (volumeChanges)="volumeChanged($event)"
@@ -37,7 +37,7 @@
                     <div fxLayout="row wrap" fxLayoutGap="10px grid">
                         <div *ngFor="let soundcard of soundcards" style="margin-bottom: 10px;"
                             [ngStyle]="{'display': soundcard.showOnStreamDeck && soundcard.category == category ? '':'none'}">
-                            <app-soundcard *ngIf="soundcard.showOnStreamDeck && soundcard.category == category"
+                            <app-soundcard (deleteSoundCard)="handleDeleteSoundCard($event)" *ngIf="soundcard.showOnStreamDeck && soundcard.category == category"
                                 (isFavoriteChangeEvent)="isFavoriteChanged($event)"
                                 (showOnStreamDeckChangeEvent)="showOnStreamDeckChanged($event)"
                                 (volumeChanges)="volumeChanged($event)"
@@ -59,7 +59,7 @@
             <div fxLayout="row wrap" fxLayoutGap="10px grid">
                 <div *ngFor="let soundcard of soundcards" style="margin-bottom: 10px;"
                     [ngStyle]="{'display': soundcard.category == category ? '':'none'}">
-                    <app-soundcard *ngIf="soundcard.category == category" (isFavoriteChangeEvent)="isFavoriteChanged($event)"
+                    <app-soundcard (deleteSoundCard)="handleDeleteSoundCard($event)" *ngIf="soundcard.category == category" (isFavoriteChangeEvent)="isFavoriteChanged($event)"
                         (showOnStreamDeckChangeEvent)="showOnStreamDeckChanged($event)"
                         (volumeChanges)="volumeChanged($event)" (startPlayingClicked)="startPlayingClicked($event)"
                         (stopPlayingClicked)="stopPlayingClicked($event)" [soundcard]="soundcard"></app-soundcard>

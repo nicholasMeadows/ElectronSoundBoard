@@ -46,6 +46,7 @@ import { FormsModule } from '@angular/forms';
 import { AddNewSoundcardButtonComponent } from './components/add-new-soundcard/add-new-soundcard-button.component';
 import { AddNewSoundcardDialogComponent } from './components/add-new-soundcard-dialog/add-new-soundcard-dialog.component';
 import { AudioPlayerComponent } from './components/audio-player/audio-player.component';
+import { DeleteSoundcardDialogComponent } from './components/delete-soundcard-dialog/delete-soundcard-dialog.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -53,7 +54,8 @@ import { AudioPlayerComponent } from './components/audio-player/audio-player.com
     SoundcardComponent,
     AddNewSoundcardButtonComponent,
     AddNewSoundcardDialogComponent,
-    AudioPlayerComponent
+    AudioPlayerComponent,
+    DeleteSoundcardDialogComponent
   ],
   imports: [
     BrowserModule,

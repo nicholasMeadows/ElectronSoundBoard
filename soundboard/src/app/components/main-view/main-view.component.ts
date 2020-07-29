@@ -170,7 +170,7 @@ export class MainViewComponent implements OnInit {
       this.currentlyPlayingCard.isCurrentlyPlaying = false;
       this.audioService.audioStopPlaying(this.currentlyPlayingCard);
       this.ipcService.sendData("streamdeck:stopplaying", this.currentlyPlayingCard);
-      
+
     }
     this.currentlyPlayingCard = soundCard;
     this.currentlyPlayingCard.isCurrentlyPlaying = true;
@@ -186,7 +186,7 @@ export class MainViewComponent implements OnInit {
     this.currentlyPlayingCard = undefined;
     console.log("Audio stop");
     this.audioService.audioStopPlaying(soundCard);
-    
+
     this.cd.detectChanges();
   }
 
@@ -206,8 +206,27 @@ export class MainViewComponent implements OnInit {
     }
   }
 
+  handleDeleteSoundCard(soundCard: SoundCard) {
+    console.log("Inside handle Delete")
+    let indexFoundAt = 0;
+   this.soundcards = this.soundcards.filter((sc, index) => {
+      if(sc.runTimeId == soundCard.runTimeId){
+        if(sc.showOnStreamDeck){
+          sc.showOnStreamDeck = false;
+          this.showOnStreamDeckChanged(sc);
+        }
+        if(sc.isCurrentlyPlaying)
+          this.stopPlayingClicked(sc);
+      }
+      return sc.runTimeId != soundCard.runTimeId;
+    });
+
+    this.updateConfig();
+  }
+
   updateConfig() {
     this.settingsService.updateConfig(this.soundcards);
   }
+
 }
 
