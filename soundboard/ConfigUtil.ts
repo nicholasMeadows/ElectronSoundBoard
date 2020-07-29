@@ -13,11 +13,11 @@ class ConfigUtil {
     }
 
     readConfigFile() {
-        return JSON.parse(fs.readFileSync('config.json'));
+        return JSON.parse(fs.readFileSync('config/config.json'));
     }
 
     writeConfigFile(configObjToWrite) {
-        fs.writeFileSync('config.json', JSON.stringify(configObjToWrite));
+        fs.writeFileSync('config/config.json', JSON.stringify(configObjToWrite));
     }
 }
 module.exports = ConfigUtil;
