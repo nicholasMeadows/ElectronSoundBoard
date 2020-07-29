@@ -4,7 +4,7 @@
   "main": "main.js",
   "build":{
     "extraResources":[
-      {"from":"appIcon.png","to": "appIcon.png"}
+      {"from":"appIcon.ico","to": "appIcon.ico"}
     ]
   },
   "scripts": {
