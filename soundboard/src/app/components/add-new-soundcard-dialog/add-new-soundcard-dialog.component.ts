@@ -84,8 +84,9 @@ export class AddNewSoundcardDialogComponent implements OnInit {
   }
 
   addExtraSoundcard(){
-    this.soundCardWithValidationArr.push(new SoundCardWithValidationData(new SoundCard(null, "","","",false,false, false, .6), false, "", false, "", false, ""))
+    this.soundCardWithValidationArr.push(new SoundCardWithValidationData(new SoundCard(null, "","","",false,false, false, 1), false, "", false, "", false, ""))
   }
+
   removeCardFromList(soundCardWithValidation: SoundCardWithValidationData, currentIndex: number) {
     this.soundCardWithValidationArr.splice(currentIndex, 1);
     if (this.soundCardWithValidationArr.length == 0) {

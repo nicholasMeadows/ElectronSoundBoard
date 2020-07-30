@@ -22,7 +22,7 @@ export class AddNewSoundcardButtonComponent implements OnInit {
   }
 
   openDialog(){
-    this.soundCardsToAdd = [new SoundCard(undefined, "","","", false, false, false, 0.6)];
+    this.soundCardsToAdd = [new SoundCard(undefined, "","","", false, false, false, 1)];
     const dialogRef = this.dialog.open(AddNewSoundcardDialogComponent, {width: '300px', data: this.soundCardsToAdd});
     dialogRef.afterClosed().subscribe(cardsToAdd => {
       if(undefined == cardsToAdd){
