@@ -16,7 +16,7 @@
     "e2e": "ng e2e",
     "electron": "electron .",
     "electron-build": "ng build --prod && electron .",
-    "package-windows": "electron-packager ./ SoundBoard --platform=win32 --arch=x64 --overwrite"
+    "package-windows": "electron-packager ./ SoundBoard --platform=win32 --arch=x64 --overwrite --icon=appIcon.ico"
   },
   "private": true,
   "dependencies": {

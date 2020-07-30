@@ -1,0 +1,20 @@
+<mat-card style="background-color: lightgrey;">
+
+    <label>Title:</label><br>
+    <input type="text" #title="ngModel" [(ngModel)]="soundCardWithValidation.title"><br>
+    <i *ngIf="!validateTitleInput() && (title.dirty || title.touched)" class="erroMsg">{{soundCardWithValidation.titleInvalidMessage}}</i><br>
+
+    <label>Category:</label><br>
+    <input type="text" #category="ngModel" [(ngModel)]="soundCardWithValidation.category"> <br>
+    <i *ngIf="!validateCategory() && (category.dirty || category.touched)" class="erroMsg">{{soundCardWithValidation.categoryInvalidMessage}}</i><br>
+
+
+    <label>Sound File:</label><br>
+    <input type="text" #soundFile="ngModel" [(ngModel)]="soundCardWithValidation.soundFilePath" class="erroMsg" (keyup)="validateSoundFile()"><br>
+    <i *ngIf="!soundCardWithValidation.isSoundFileValid" class="erroMsg">{{soundCardWithValidation.soundFileInvalidMessage}}</i>
+
+    <div style="margin-top: 10px;">
+        <button mat-raised-button color="warn" [disabled]="!canSubmit()" style="margin-right: 10px;" (click)="save()">Save</button>
+        <button mat-raised-button (click)="cancleUpdate()">Cancel</button>
+    </div>
+</mat-card>

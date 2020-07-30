@@ -196,7 +196,7 @@ export class MainViewComponent implements OnInit {
 
   showOnStreamDeckChanged(soundCard: SoundCard) {
     this.updateConfig();
-    this.ipcService.sendData("streamdeck:updatecards", null);
+    this.updateStreamDeck();
   }
 
   volumeChanged(soundCard: SoundCard) {
@@ -224,7 +224,24 @@ export class MainViewComponent implements OnInit {
     this.updateConfig();
   }
 
+  handleCardUpdated(updatedCard: SoundCard){
+    let runtimeId = updatedCard.runTimeId;
+    let foundCards = this.soundcards.filter(card => card.runTimeId == runtimeId);
+    if(foundCards.length > 0){
+      foundCards[0].title = updatedCard.title;
+      foundCards[0].category = updatedCard.category;
+      foundCards[0].soundFilePath = updatedCard.soundFilePath;
+    }
+    this.updateConfig();
+    this.updateStreamDeck();
+  }
+
+
+  updateStreamDeck(){
+    this.ipcService.sendData("streamdeck:updatecards", null);
+  }
   updateConfig() {
+    console.log("Updating the config with values:", this.soundcards);
     this.settingsService.updateConfig(this.soundcards);
   }
 

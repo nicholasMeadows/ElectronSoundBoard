@@ -22,7 +22,7 @@ function createWindow() {
     width: 1200,
     height: 800,
     backgroundColor: '#ffffff',
-    icon: __dirname + "\\appIcon.png",
+    icon: __dirname + "/appIcon.ico",
     webPreferences: {
       nodeIntegration: true
     }

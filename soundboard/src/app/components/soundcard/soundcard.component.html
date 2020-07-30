@@ -1,11 +1,21 @@
-<mat-card
-    [ngStyle]="{'background-color': soundcard.isCurrentlyPlaying ? 'green' : 'lightgrey'}"
-    style="width: 200px; ">
-   <button style="position: absolute; top: 5px; right: 5px; padding: 0px;"><mat-icon aria-hidden="false" (click)="handleDeleteClicked()">delete</mat-icon></button>
+<mat-card [ngStyle]="{'background-color': soundcard.isCurrentlyPlaying ? 'green' : 'lightgrey'}" style="width: 200px; ">
+    <div style="padding-bottom: 10px;">
+        <button mat-raised-button (click)="handleEditClicked()">
+            <mat-icon style="margin-left: -5px;">edit</mat-icon>
+            Edit
+        </button>
+        <!-- style="position: absolute; top: 5px; right: 5px; padding: 0px;" -->
+        <button mat-raised-button style="float:right" (click)="handleDeleteClicked()">
+            <mat-icon aria-hidden="false">delete</mat-icon>
+        </button>
+    </div>
+
     <mat-card-title>{{soundcard.title}}</mat-card-title>
-    <p>Favorite <input type="checkbox" (change)="isFavoriteChange()" [(ngModel)]="soundcard.isFavorite" ></p>
-    <p>Show On Streamdeck: <input type="checkbox" (change)="showOnStreamDeckChange()" [(ngModel)]="soundcard.showOnStreamDeck" ></p>
-    <p>current volume: <mat-slider min="0" max="1" step="0.1" (change)="volumeChanged()" [(ngModel)]="soundcard.currentVolume"></mat-slider>
+    <p>Favorite <input type="checkbox" (change)="isFavoriteChange()" [(ngModel)]="soundcard.isFavorite"></p>
+    <p>Show On Streamdeck: <input type="checkbox" (change)="showOnStreamDeckChange()"
+            [(ngModel)]="soundcard.showOnStreamDeck"></p>
+    <p>current volume: <mat-slider min="0" max="1" step="0.1" (change)="volumeChanged()"
+            [(ngModel)]="soundcard.currentVolume"></mat-slider>
     </p>
     <button (click)="soundButtonClicked()">{{soundcard.isCurrentlyPlaying ? 'Stop': 'Play'}}</button>
 </mat-card>

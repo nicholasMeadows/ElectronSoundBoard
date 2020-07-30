@@ -47,6 +47,7 @@ import { AddNewSoundcardButtonComponent } from './components/add-new-soundcard/a
 import { AddNewSoundcardDialogComponent } from './components/add-new-soundcard-dialog/add-new-soundcard-dialog.component';
 import { AudioPlayerComponent } from './components/audio-player/audio-player.component';
 import { DeleteSoundcardDialogComponent } from './components/delete-soundcard-dialog/delete-soundcard-dialog.component';
+import { EditSoundcardComponent } from './components/edit-soundcard/edit-soundcard.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -55,7 +56,8 @@ import { DeleteSoundcardDialogComponent } from './components/delete-soundcard-di
     AddNewSoundcardButtonComponent,
     AddNewSoundcardDialogComponent,
     AudioPlayerComponent,
-    DeleteSoundcardDialogComponent
+    DeleteSoundcardDialogComponent,
+    EditSoundcardComponent
   ],
   imports: [
     BrowserModule,
