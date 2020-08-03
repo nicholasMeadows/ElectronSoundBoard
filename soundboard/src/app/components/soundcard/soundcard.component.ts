@@ -1,3 +1,6 @@
+import { SoundcardService } from './../../services/soundcard.service';
+import { AudioService } from './../../services/audio.service';
+
 import { EditSoundcardComponent } from './../edit-soundcard/edit-soundcard.component';
 import { DeleteSoundcardDialogComponent } from './../delete-soundcard-dialog/delete-soundcard-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -14,28 +17,7 @@ export class SoundcardComponent implements OnInit {
   @Input()
   soundcard: SoundCard;
 
-  @Output()
-  startPlayingClicked: EventEmitter<SoundCard> = new EventEmitter<SoundCard>();
-
-  @Output()
-  stopPlayingClicked: EventEmitter<SoundCard> = new EventEmitter<SoundCard>();
-
-  @Output()
-  volumeChanges: EventEmitter<SoundCard> = new EventEmitter<SoundCard>();
-
-  @Output()
-  isFavoriteChangeEvent: EventEmitter<SoundCard> = new EventEmitter<SoundCard>();
-
-  @Output()
-  showOnStreamDeckChangeEvent: EventEmitter<SoundCard> = new EventEmitter<SoundCard>();
-
-  @Output()
-  deleteSoundCard: EventEmitter<SoundCard> = new EventEmitter();
-
-  @Output()
-  editSoundCard: EventEmitter<SoundCard> = new EventEmitter();
-
-  constructor(public dialog: MatDialog) { }
+  constructor(public dialog: MatDialog, private soundCardService: SoundcardService, private audioService: AudioService) { }
 
   ngOnInit(): void {
   }
@@ -43,38 +25,38 @@ export class SoundcardComponent implements OnInit {
   soundButtonClicked() {
     this.soundcard.isCurrentlyPlaying = !this.soundcard.isCurrentlyPlaying;
     if (this.soundcard.isCurrentlyPlaying) {
-      this.startPlayingClicked.emit(this.soundcard);
+      this.soundCardService.play(this.soundcard);
     } else {
-      this.stopPlayingClicked.emit(this.soundcard);
+      this.soundCardService.stopPlaying(this.soundcard);
     }
   }
 
   isFavoriteChange() {
-    this.isFavoriteChangeEvent.emit(this.soundcard);
+    this.soundCardService.updateConfig();
   }
 
   showOnStreamDeckChange() {
-    this.showOnStreamDeckChangeEvent.emit(this.soundcard);
+    this.soundCardService.showOnStreamDeckChanged(this.soundcard);
   }
-
 
   volumeChanged() {
-    this.volumeChanges.emit(this.soundcard);
+    this.soundCardService.volumeChange(this.soundcard);
   }
 
-  handleEditClicked(){
-    const dialogRef = this.dialog.open(EditSoundcardComponent, {width: "300px", data: this.soundcard});
+  handleEditClicked() {
+    const dialogRef = this.dialog.open(EditSoundcardComponent, { width: "300px", data: this.soundcard });
     dialogRef.afterClosed().subscribe(editedSoundCard => {
-      if(undefined != editedSoundCard){
-        this.editSoundCard.emit(editedSoundCard);
+      if (undefined != editedSoundCard) {
+        this.soundCardService.editSoundCard(editedSoundCard);
       }
     });
   }
-  handleDeleteClicked(){
-    const dialogRef = this.dialog.open(DeleteSoundcardDialogComponent, {width: '300px', data:this.soundcard});
+
+  handleDeleteClicked() {
+    const dialogRef = this.dialog.open(DeleteSoundcardDialogComponent, { width: '300px', data: this.soundcard });
     dialogRef.afterClosed().subscribe(shouldDelete => {
-      if(shouldDelete){
-        this.deleteSoundCard.emit(this.soundcard);
+      if (shouldDelete) {
+        this.soundCardService.deleteSoundCard(this.soundcard);
       }
     })
   }

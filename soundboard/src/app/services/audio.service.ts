@@ -9,6 +9,7 @@ import { SoundCard } from '../models/soundcard';
   providedIn: 'root'
 })
 export class AudioService {
+  currentlyPlayingSoundCard:SoundCard;
 
   audioFinishedSubscription: Subscriber<SoundCard>;
   audioVolumeChangedSubscrition: Subscriber<number>;
@@ -64,16 +65,24 @@ export class AudioService {
 
   //Called from main
   audioStartPlaying(soundCard: SoundCard){
+    // console.log('Inside audio Start Playing')
+    if(undefined != this.currentlyPlayingSoundCard){
+      this.audioStopPlaying(this.currentlyPlayingSoundCard);
+    }
+    this.currentlyPlayingSoundCard = soundCard;
     this.audioStartPlayingSubscription.next(soundCard);
   }
 
   //Called from main
   audioStopPlaying(soundCard: SoundCard){
+    this.currentlyPlayingSoundCard.isCurrentlyPlaying = false;
+    this.currentlyPlayingSoundCard = undefined;
     this.audioStopPlayingSubscription.next(soundCard);
   }
 
   //called from audio component
   audioFinished(soundCard: SoundCard){
+    this.currentlyPlayingSoundCard = undefined;
     this.audioFinishedSubscription.next(soundCard);
   }
 

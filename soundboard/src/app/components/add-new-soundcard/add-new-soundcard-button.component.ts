@@ -1,3 +1,4 @@
+import { SoundcardService } from './../../services/soundcard.service';
 import { IpcService } from './../../services/ipc-service.service';
 import { SoundCard } from './../../models/soundcard';
 import { AddNewSoundcardDialogComponent } from './../add-new-soundcard-dialog/add-new-soundcard-dialog.component';
@@ -13,10 +14,10 @@ export class AddNewSoundcardButtonComponent implements OnInit {
   soundCardsToAdd: SoundCard[];
   // animal: string; 
 
-  constructor(public dialog: MatDialog, private ipcService: IpcService) { }
+  constructor(public dialog: MatDialog, private ipcService: IpcService, private soundCardService: SoundcardService) { }
 
-  @Output()
-  cardsAdded: EventEmitter<SoundCard[]> = new EventEmitter();
+  // @Output()
+  // cardsAdded: EventEmitter<SoundCard[]> = new EventEmitter();
 
   ngOnInit(): void {
   }
@@ -28,7 +29,8 @@ export class AddNewSoundcardButtonComponent implements OnInit {
       if(undefined == cardsToAdd){
       console.log('Dialog was closed with no results')
       } else {
-        this.cardsAdded.emit(cardsToAdd);
+        // this.cardsAdded.emit(cardsToAdd);
+        this.soundCardService.addNewCards(cardsToAdd);
       }
     })
   }

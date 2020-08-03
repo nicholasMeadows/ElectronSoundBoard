@@ -1,4 +1,4 @@
-<app-add-new-soundcard-button (cardsAdded)="handelCardsAdded($event)"></app-add-new-soundcard-button>
+<app-add-new-soundcard-button ></app-add-new-soundcard-button>
 <div>
     <mat-accordion>
         <mat-expansion-panel *ngIf="hasFavorites()">
@@ -13,12 +13,10 @@
                     <div fxLayout="row wrap" fxLayoutGap="10px grid">
                         <div *ngFor="let soundcard of soundcards" style="margin-bottom: 10px;"
                             [ngStyle]="{'display': soundcard.isFavorite && soundcard.category == category ? '':'none'}">
-                            <app-soundcard (editSoundCard)="handleCardUpdated($event)" (deleteSoundCard)="handleDeleteSoundCard($event)" *ngIf="soundcard.isFavorite && soundcard.category == category"
-                                (isFavoriteChangeEvent)="isFavoriteChanged($event)"
-                                (showOnStreamDeckChangeEvent)="showOnStreamDeckChanged($event)"
-                                (volumeChanges)="volumeChanged($event)"
-                                (startPlayingClicked)="startPlayingClicked($event)"
-                                (stopPlayingClicked)="stopPlayingClicked($event)" [soundcard]="soundcard">
+                            <app-soundcard 
+                                
+                                *ngIf="soundcard.isFavorite && soundcard.category == category"
+                                 [soundcard]="soundcard">
                             </app-soundcard>
                         </div>
                     </div>
@@ -37,12 +35,10 @@
                     <div fxLayout="row wrap" fxLayoutGap="10px grid">
                         <div *ngFor="let soundcard of soundcards" style="margin-bottom: 10px;"
                             [ngStyle]="{'display': soundcard.showOnStreamDeck && soundcard.category == category ? '':'none'}">
-                            <app-soundcard (editSoundCard)="handleCardUpdated($event)" (deleteSoundCard)="handleDeleteSoundCard($event)" *ngIf="soundcard.showOnStreamDeck && soundcard.category == category"
-                                (isFavoriteChangeEvent)="isFavoriteChanged($event)"
-                                (showOnStreamDeckChangeEvent)="showOnStreamDeckChanged($event)"
-                                (volumeChanges)="volumeChanged($event)"
-                                (startPlayingClicked)="startPlayingClicked($event)"
-                                (stopPlayingClicked)="stopPlayingClicked($event)" [soundcard]="soundcard">
+                            <app-soundcard 
+                               
+                                *ngIf="soundcard.showOnStreamDeck && soundcard.category == category"
+                                 [soundcard]="soundcard">
                             </app-soundcard>
                         </div>
                     </div>
@@ -59,10 +55,10 @@
             <div fxLayout="row wrap" fxLayoutGap="10px grid">
                 <div *ngFor="let soundcard of soundcards" style="margin-bottom: 10px;"
                     [ngStyle]="{'display': soundcard.category == category ? '':'none'}">
-                    <app-soundcard (editSoundCard)="handleCardUpdated($event)" (deleteSoundCard)="handleDeleteSoundCard($event)" *ngIf="soundcard.category == category" (isFavoriteChangeEvent)="isFavoriteChanged($event)"
-                        (showOnStreamDeckChangeEvent)="showOnStreamDeckChanged($event)"
-                        (volumeChanges)="volumeChanged($event)" (startPlayingClicked)="startPlayingClicked($event)"
-                        (stopPlayingClicked)="stopPlayingClicked($event)" [soundcard]="soundcard"></app-soundcard>
+                    <app-soundcard 
+                         *ngIf="soundcard.category == category"
+                         [soundcard]="soundcard">
+                    </app-soundcard>
                 </div>
             </div>
         </mat-expansion-panel>

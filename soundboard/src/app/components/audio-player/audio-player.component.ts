@@ -13,7 +13,7 @@ export class AudioPlayerComponent implements OnInit {
   currentSound: SoundCard;
 
   @ViewChild("audioPlayer")
-  audioPlayer//: ElementRef<HTMLAudioElement>;
+  audioPlayer;
 
   constructor(private ipcService: IpcService, private audioService: AudioService, @Inject(DOCUMENT) private document: Document) { 
   }
