@@ -1,3 +1,4 @@
+import { StreamdeckService } from './streamdeck.service';
 import { AudioService } from './audio.service';
 
 import { IpcService } from './ipc-service.service';
@@ -13,31 +14,33 @@ export class SoundcardService {
   private runTimeId: number = 0;
   soundcards: SoundCard[];
 
-  constructor(private settingsService: SettingsService, private ipcService: IpcService, private audioService: AudioService, private appRef: ApplicationRef) {
-    this.ipcService.getStreamDeckStartAudio().subscribe(soundCard => {
+  constructor(private settingsService: SettingsService, private ipcService: IpcService, private audioService: AudioService, private streamDeckService: StreamdeckService, private appRef: ApplicationRef) {
+    this.streamDeckService.getStreamDeckStartAudioSubscription().subscribe(soundCard => {
       console.log("Stream deck start", soundCard);
       let filteredSoundCards = this.soundcards.filter(sc => sc.runTimeId == soundCard.runTimeId);
       if (filteredSoundCards.length > 0) {
+        let foundSoundCard = filteredSoundCards[0];
         console.log("Found soundCards", filteredSoundCards);
-        filteredSoundCards[0].isCurrentlyPlaying = true;
+        foundSoundCard.isCurrentlyPlaying = true;
         this.appRef.tick();
-        this.play(filteredSoundCards[0]);
+        this.play(foundSoundCard);
       }
     });
 
-    this.ipcService.getStreamDeckStopAudio().subscribe(soundCard => {
+    this.streamDeckService.getStreamDeckStopAudioSubscription().subscribe(soundCard => {
       console.log("Stream deck stop", soundCard);
       let filteredSoundCards = this.soundcards.filter(sc => sc.runTimeId == soundCard.runTimeId);
       if (filteredSoundCards.length > 0) {
-        filteredSoundCards[0].isCurrentlyPlaying = false;
+        let foundSoundCard = filteredSoundCards[0];
+        foundSoundCard.isCurrentlyPlaying = false;
         this.appRef.tick();
-        this.stopPlaying(filteredSoundCards[0]);
+        this.stopPlaying(foundSoundCard);
       }
     });
 
     this.audioService.getAudioFinishedSubscription().subscribe(soundCard => {
       soundCard.isCurrentlyPlaying = false;
-      this.ipcService.sendData("streamdeck:stopplaying", soundCard);
+      this.streamDeckService.sendStopPlayingToStreamDeck(soundCard);
     });
   }
 
@@ -55,7 +58,7 @@ export class SoundcardService {
         this.sortSoundCards(soundcards);
         this.soundcards = soundcards;
         this.updateConfig();
-        this.ipcService.sendData("streamdeck:initwebsocket", null);
+        this.streamDeckService.initStreamDeckWebSocket();
         obs.next(this.soundcards);
       });
     });
@@ -63,12 +66,13 @@ export class SoundcardService {
 
   play(soundcard: SoundCard) {
     this.audioService.audioStartPlaying(soundcard);
-    this.ipcService.sendData("streamdeck:startplaying", soundcard);
+    this.streamDeckService.sendPlayAudioToStreamDeck(soundcard);
+
   }
 
   stopPlaying(soundcard: SoundCard) {
     this.audioService.audioStopPlaying(soundcard);
-    this.ipcService.sendData("streamdeck:stopplaying", soundcard);
+    this.streamDeckService.sendStopAudioToStreamDeck(soundcard);
   }
 
   volumeChange(soundCard: SoundCard) {
@@ -77,7 +81,7 @@ export class SoundcardService {
     if (soundCard.isCurrentlyPlaying) {
       this.audioService.audioVolumeChanged(soundCard.currentVolume);
     }
-  }  
+  }
 
   addNewCards(soundCards: SoundCard[]) {
     soundCards.forEach(card => {
@@ -92,7 +96,7 @@ export class SoundcardService {
   editSoundCard(editedSoundCard: SoundCard) {
     let runtimeId = editedSoundCard.runTimeId;
     let foundCards = this.soundcards.filter(card => card.runTimeId == runtimeId);
-    if(foundCards.length > 0){
+    if (foundCards.length > 0) {
       foundCards[0].title = editedSoundCard.title;
       foundCards[0].category = editedSoundCard.category;
       foundCards[0].soundFilePath = editedSoundCard.soundFilePath;
@@ -105,7 +109,7 @@ export class SoundcardService {
     console.log("Inside handle Delete")
     let indexFoundAt = 0;
 
-    for(let [index, card] of this.soundcards.entries()){
+    for (let [index, card] of this.soundcards.entries()) {
       if (card.runTimeId == soundCard.runTimeId) {
         indexFoundAt = index;
         if (card.showOnStreamDeck) {
@@ -120,7 +124,7 @@ export class SoundcardService {
 
     this.soundcards.splice(indexFoundAt, 1);
     this.updateConfig();
-  } 
+  }
 
   showOnStreamDeckChanged(soundcard: SoundCard) {
     this.updateConfig();
@@ -128,7 +132,7 @@ export class SoundcardService {
   }
 
   private updateStreamDeck() {
-    this.ipcService.sendData("streamdeck:updatecards", null);
+    this.streamDeckService.sendUpdateCardsToStreamDeck();
   }
 
   private sortSoundCards(soundcards: SoundCard[]) {
