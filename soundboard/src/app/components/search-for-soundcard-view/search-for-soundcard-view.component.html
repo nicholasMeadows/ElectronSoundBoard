@@ -1,0 +1,18 @@
+<div>
+    <mat-accordion>
+        <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+                <mat-panel-title>Search Results</mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-accordion>
+                <div fxLayout="row wrap" fxLayoutGap="10px grid">
+                    <div *ngFor="let soundcard of uiSoundCards" style="margin-bottom: 10px;">
+                        <app-soundcard [soundcard]="soundcard">
+                        </app-soundcard>
+                    </div>
+                </div>
+
+            </mat-accordion>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>

@@ -12,7 +12,7 @@ import { Injectable, ChangeDetectorRef, ApplicationRef } from '@angular/core';
 })
 export class SoundcardService {
   private runTimeId: number = 0;
-  soundcards: SoundCard[];
+  soundcards: SoundCard[] = [];
 
   constructor(private settingsService: SettingsService, private ipcService: IpcService, private audioService: AudioService, private streamDeckService: StreamdeckService, private appRef: ApplicationRef) {
     this.streamDeckService.getStreamDeckStartAudioSubscription().subscribe(soundCard => {
@@ -42,25 +42,27 @@ export class SoundcardService {
       soundCard.isCurrentlyPlaying = false;
       this.streamDeckService.sendStopPlayingToStreamDeck(soundCard);
     });
+
+
+    
+    this.settingsService.getConfig().subscribe(config => {
+      let soundcards = config.soundCards;
+      soundcards.forEach(soundcard => {
+        soundcard.isCurrentlyPlaying = false;
+        soundcard.runTimeId = this.runTimeId;
+        this.runTimeId++;
+      });
+
+      this.sortSoundCards(soundcards);
+      this.soundcards.push(...soundcards);
+      this.updateConfig();
+      this.streamDeckService.initStreamDeckWebSocket();
+    });
   }
 
   loadSoundCards(): Observable<SoundCard[]> {
     return new Observable(obs => {
-      this.settingsService.getConfig().subscribe(config => {
-        let soundcards = config.soundCards;
-
-        soundcards.forEach(soundcard => {
-          soundcard.isCurrentlyPlaying = false;
-          soundcard.runTimeId = this.runTimeId;
-          this.runTimeId++;
-        });
-
-        this.sortSoundCards(soundcards);
-        this.soundcards = soundcards;
-        this.updateConfig();
-        this.streamDeckService.initStreamDeckWebSocket();
-        obs.next(this.soundcards);
-      });
+      obs.next(this.soundcards);
     });
   }
 
@@ -129,6 +131,10 @@ export class SoundcardService {
   showOnStreamDeckChanged(soundcard: SoundCard) {
     this.updateConfig();
     this.updateStreamDeck();
+  }
+
+  getSoundCards(): SoundCard[] {
+    return this.soundcards;
   }
 
   private updateStreamDeck() {

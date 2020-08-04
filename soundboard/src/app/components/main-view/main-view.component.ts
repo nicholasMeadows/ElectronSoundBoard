@@ -1,3 +1,4 @@
+import { MainviewSearchbarService } from './../../services/mainview-searchbar.service';
 import { SoundcardService } from './../../services/soundcard.service';
 import { Config } from './../../models/config';
 import { SettingsService } from './../../services/settings.service';
@@ -14,73 +15,98 @@ import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@an
   styleUrls: ['./main-view.component.css']
 })
 export class MainViewComponent implements OnInit {
-  soundcards: SoundCard[] = [];
-  currentlyPlayingCard: SoundCard;
-  runTimeId: number = 0;
-  constructor(private cd: ChangeDetectorRef, private soundCardService: SoundcardService, private settingsService: SettingsService, private ipcService: IpcService, private audioService: AudioService) { }
-
-  ngOnInit(): void {
-      this.loadData();
-  }
-
-  loadData() {
-    this.soundCardService.loadSoundCards().subscribe(soundCards => {
-      this.soundcards = soundCards;
+  isSearching: boolean = false;
+  constructor(private searchService: MainviewSearchbarService){}
+  ngOnInit(){
+    this.searchService.getUpdateSearchBS().subscribe(searchCriteria => {
+      if(searchCriteria.trim().length == 0){
+        this.isSearching = false;
+      } else {
+        this.isSearching = true;
+      }
     });
   }
+  // soundcards: SoundCard[] = [];
+  // uiSoundCards: SoundCard[] = [];
 
-  hasFavorites() {
-    let hasFavorites = this.soundcards.map(soundcard => soundcard.isFavorite).filter((value, index, self) => value == true);
-    return !(hasFavorites.length == 0);
-  }
+  // // currentSearch: string = "";
 
-  hasStreamDeckItems() {
-    let hasStreamDeckItems = this.soundcards.map(soundcard => soundcard.showOnStreamDeck).filter((value, index, self) => value == true);
-    return !(hasStreamDeckItems.length == 0);
-  }
+  // constructor(private cd: ChangeDetectorRef, private soundCardService: SoundcardService, private searchBarService: MainviewSearchbarService) { }
 
-  findSoundCardAndSetIsPlaying(soundCard: SoundCard) {
-    let idToFind = soundCard.runTimeId;
+  // ngOnInit(): void {
+  //   this.loadData();
+  //   this.searchBarService.getUpdateSearchObservable().subscribe(searchCriteria => this.filterSoundCards(searchCriteria))
+  // }
 
-    let foundSoundCard = this.soundcards.find((soundcard, index) => {
-      return soundcard.runTimeId == idToFind;
-    })
-    foundSoundCard.isCurrentlyPlaying = false;
-    this.cd.detectChanges();
-  }
+  // loadData() {
+  //   this.soundCardService.loadSoundCards().subscribe(soundCards => {
+  //     this.soundcards = soundCards;
+  //     this.uiSoundCards = this.soundcards;
+  //   });
+  // }
 
-  getCategories() {
-    return this.soundcards.map(soundcard => soundcard.category).filter((value, index, self) => self.indexOf(value) === index)
-      .sort((a, b) => {
-        if (a > b) {
-          return 1;
-        } else if (a < b) {
-          return -1;
-        }
-        return 0;
-      });
-  }
-  getFavoritesCategory() {
-    let favoritesCategory = this.soundcards.filter((val) => val.isFavorite).map(soundcard => soundcard.category).filter((value, index, self) => self.indexOf(value) === index).sort((a, b) => {
-      if (a > b) {
-        return 1;
-      } else if (a < b) {
-        return -1;
-      }
-      return 0;
-    });;
-    return favoritesCategory;
-  }
+  // hasFavorites() {
+  //   let hasFavorites = this.uiSoundCards.map(soundcard => soundcard.isFavorite).filter((value, index, self) => value == true);
+  //   return !(hasFavorites.length == 0);
+  // }
 
-  getStreamDeckCategory() {
-    let favoritesCategory = this.soundcards.filter((val) => val.showOnStreamDeck).map(soundcard => soundcard.category).filter((value, index, self) => self.indexOf(value) === index).sort((a, b) => {
-      if (a > b) {
-        return 1;
-      } else if (a < b) {
-        return -1;
-      }
-      return 0;
-    });;
-    return favoritesCategory;
-  }
+  // hasStreamDeckItems() {
+  //   let hasStreamDeckItems = this.uiSoundCards.map(soundcard => soundcard.showOnStreamDeck).filter((value, index, self) => value == true);
+  //   return !(hasStreamDeckItems.length == 0);
+  // }
+
+  // findSoundCardAndSetIsPlaying(soundCard: SoundCard) {
+  //   let idToFind = soundCard.runTimeId;
+
+  //   let foundSoundCard = this.uiSoundCards.find((soundcard, index) => {
+  //     return soundcard.runTimeId == idToFind;
+  //   })
+  //   foundSoundCard.isCurrentlyPlaying = false;
+  //   this.cd.detectChanges();
+  // }
+
+  // getCategories() {
+  //   return this.uiSoundCards.map(soundcard => soundcard.category).filter((value, index, self) => self.indexOf(value) === index)
+  //     .sort((a, b) => {
+  //       if (a > b) {
+  //         return 1;
+  //       } else if (a < b) {
+  //         return -1;
+  //       }
+  //       return 0;
+  //     });
+  // }
+  // getFavoritesCategory() {
+  //   let favoritesCategory = this.uiSoundCards.filter((val) => val.isFavorite).map(soundcard => soundcard.category).filter((value, index, self) => self.indexOf(value) === index).sort((a, b) => {
+  //     if (a > b) {
+  //       return 1;
+  //     } else if (a < b) {
+  //       return -1;
+  //     }
+  //     return 0;
+  //   });;
+  //   return favoritesCategory;
+  // }
+
+  // getStreamDeckCategory() {
+  //   let favoritesCategory = this.uiSoundCards.filter((val) => val.showOnStreamDeck).map(soundcard => soundcard.category).filter((value, index, self) => self.indexOf(value) === index).sort((a, b) => {
+  //     if (a > b) {
+  //       return 1;
+  //     } else if (a < b) {
+  //       return -1;
+  //     }
+  //     return 0;
+  //   });;
+  //   return favoritesCategory;
+  // }
+
+  // filterSoundCards(searchCriteria) {
+  //   if (searchCriteria.trim().length != 0) {
+  //     this.uiSoundCards = this.soundcards.filter(soundcard => {
+  //       return soundcard.title.startsWith(searchCriteria);
+  //     })
+  //   } else {
+  //     this.uiSoundCards = this.soundcards;
+  //   }
+  // }
 }
