@@ -5,7 +5,7 @@
 </div> -->
 
 <button mat-raised-button color="warn" style="height: 4em;">
-    <mat-icon (click)="showSearch = !showSearch">search</mat-icon>
+    <mat-icon (click)="searchIconClicked()">search</mat-icon>
     <mat-form-field *ngIf="showSearch" style="padding-left: 10px;">
         <input matInput type="search" [(ngModel)]="currentSearch" (ngModelChange)="searchBarChanged()">
     </mat-form-field>
