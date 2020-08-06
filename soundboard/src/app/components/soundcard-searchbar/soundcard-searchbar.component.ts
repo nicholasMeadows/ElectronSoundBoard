@@ -18,12 +18,17 @@ export class SoundcardSearchbarComponent implements OnInit {
     this.searchService.updateSearchCriteria(this.currentSearch);
   }
 
-  searchIconClicked(){
+  seachButtonClicked(){
     this.showSearch = !this.showSearch;
 
     if(!this.showSearch){
       this.currentSearch = "";
       this.searchBarChanged();
     }
+  }
+
+  inputClickEvent(event) {
+    event.stopPropagation();
+    event.preventDefault();
   }
 }

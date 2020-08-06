@@ -4,9 +4,9 @@
     </div>
 </div> -->
 
-<button mat-raised-button color="warn" style="height: 4em;">
-    <mat-icon (click)="searchIconClicked()">search</mat-icon>
+<button mat-raised-button color="warn" (click)="seachButtonClicked()" style="height: 4em;">
+    <mat-icon >search</mat-icon>
     <mat-form-field *ngIf="showSearch" style="padding-left: 10px;">
-        <input matInput type="search" [(ngModel)]="currentSearch" (ngModelChange)="searchBarChanged()">
+        <input id="SearchInput" matInput type="search" [(ngModel)]="currentSearch" (ngModelChange)="searchBarChanged()" (click)="inputClickEvent($event)">
     </mat-form-field>
 </button>
