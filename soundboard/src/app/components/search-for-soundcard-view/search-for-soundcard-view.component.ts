@@ -1,7 +1,6 @@
 import { SoundcardService } from './../../services/soundcard.service';
 import { SoundCard } from './../../models/soundcard';
-import { MainviewSearchbarService } from './../../services/mainview-searchbar.service';
-import { MainviewSearchbarComponent } from './../mainview-searchbar/mainview-searchbar.component';
+import { SoundcardSearchService } from '../../services/soundcard-searchbar.service';
 
 import { Component, OnInit } from '@angular/core';
 
@@ -14,7 +13,7 @@ export class SearchForSoundcardViewComponent implements OnInit {
   originalSoundCardRef: SoundCard[];
   uiSoundCards: SoundCard[];
 
-  constructor(private soundcardService:SoundcardService, private searchbarComponent: MainviewSearchbarService) { }
+  constructor(private soundcardService:SoundcardService, private searchbarComponent: SoundcardSearchService) { }
 
   ngOnInit(): void {
     this.originalSoundCardRef = this.soundcardService.getSoundCards();

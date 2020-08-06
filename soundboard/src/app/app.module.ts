@@ -1,3 +1,4 @@
+import { SoundcardSearchbarComponent } from './components/soundcard-searchbar/soundcard-searchbar.component';
 import { MainViewComponent } from './components/main-view/main-view.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -48,7 +49,6 @@ import { AddNewSoundcardDialogComponent } from './components/add-new-soundcard-d
 import { AudioPlayerComponent } from './components/audio-player/audio-player.component';
 import { DeleteSoundcardDialogComponent } from './components/delete-soundcard-dialog/delete-soundcard-dialog.component';
 import { EditSoundcardComponent } from './components/edit-soundcard/edit-soundcard.component';
-import { MainviewSearchbarComponent } from './components/mainview-searchbar/mainview-searchbar.component';
 import { DefaultSoundcardViewComponent } from './components/default-soundcard-view/default-soundcard-view.component';
 import { SearchForSoundcardViewComponent } from './components/search-for-soundcard-view/search-for-soundcard-view.component';
 @NgModule({
@@ -61,7 +61,7 @@ import { SearchForSoundcardViewComponent } from './components/search-for-soundca
     AudioPlayerComponent,
     DeleteSoundcardDialogComponent,
     EditSoundcardComponent,
-    MainviewSearchbarComponent,
+    SoundcardSearchbarComponent,
     DefaultSoundcardViewComponent,
     SearchForSoundcardViewComponent
   ],

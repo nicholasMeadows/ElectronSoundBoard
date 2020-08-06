@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
-export class MainviewSearchbarService {
+export class SoundcardSearchService {
   // updateSearchObs: Observable<string>;
   // updateSearchSubscriber: Subscriber<string>;
   updateSearchBS: BehaviorSubject<string>;

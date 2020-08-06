@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { MainviewSearchbarService } from './mainview-searchbar.service';
+import { MainviewSearchbarService } from './soundcard-searchbar.service';
 
 describe('MainviewSearchbarService', () => {
   let service: MainviewSearchbarService;

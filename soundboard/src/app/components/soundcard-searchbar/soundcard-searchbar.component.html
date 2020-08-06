@@ -1,0 +1,12 @@
+<!-- <div style="margin: 10px; height: 35px">
+    <div style="position: absolute; top: 2%;">
+        <label>Search: </label><input type="search" [(ngModel)]="currentSearch" (ngModelChange)="searchBarChanged()">
+    </div>
+</div> -->
+
+<button mat-raised-button color="warn" style="height: 4em;">
+    <mat-icon (click)="showSearch = !showSearch">search</mat-icon>
+    <mat-form-field *ngIf="showSearch" style="padding-left: 10px;">
+        <input matInput type="search" [(ngModel)]="currentSearch" (ngModelChange)="searchBarChanged()">
+    </mat-form-field>
+</button>

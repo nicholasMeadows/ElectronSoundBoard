@@ -1,4 +1,4 @@
-import { MainviewSearchbarService } from './../../services/mainview-searchbar.service';
+import { SoundcardSearchService } from './../../services/soundcard-searchbar.service';
 import { SoundcardService } from './../../services/soundcard.service';
 import { Config } from './../../models/config';
 import { SettingsService } from './../../services/settings.service';
@@ -16,7 +16,7 @@ import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@an
 })
 export class MainViewComponent implements OnInit {
   isSearching: boolean = false;
-  constructor(private searchService: MainviewSearchbarService){}
+  constructor(private searchService: SoundcardSearchService){}
   ngOnInit(){
     this.searchService.getUpdateSearchBS().subscribe(searchCriteria => {
       if(searchCriteria.trim().length == 0){
