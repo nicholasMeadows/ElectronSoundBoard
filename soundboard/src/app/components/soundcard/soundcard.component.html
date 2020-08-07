@@ -11,7 +11,8 @@
     </div>
 
     <mat-card-title>{{soundcard.title}}</mat-card-title>
-    <p>Duration: {{soundDuration}}</p>
+
+    <h3>Duration: {{soundDuration}}</h3>
     <p>Favorite <input type="checkbox" (change)="isFavoriteChange()" [(ngModel)]="soundcard.isFavorite"></p>
     <p>Show On Streamdeck: <input type="checkbox" (change)="showOnStreamDeckChange()"
             [(ngModel)]="soundcard.showOnStreamDeck"></p>
