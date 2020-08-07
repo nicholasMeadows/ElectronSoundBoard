@@ -16,10 +16,49 @@ export class SoundcardComponent implements OnInit {
 
   @Input()
   soundcard: SoundCard;
+  soundDuration: string;
 
   constructor(public dialog: MatDialog, private soundCardService: SoundcardService, private audioService: AudioService) { }
 
   ngOnInit(): void {
+    this.audioService.getSoundDuration(this.soundcard.soundFilePath).subscribe(duration => {
+      this.formatDuration(duration);
+      // console.log(this.soundcard.soundFilePath, ' Duration: ', leng)
+    });
+  }
+
+  formatDuration(duration) {
+    duration = Math.round(duration);
+
+    let hours = Math.floor(duration / 3600);
+    let minutes = Math.floor((duration - (hours * 3600)) / 60);
+    let seconds = duration - (hours * 3600) - (minutes * 60);
+
+    let durationStr = "";
+
+    if (hours > 0) {
+      if (hours < 10) {
+        durationStr += "0" + hours;
+      } else {
+        durationStr += hours;
+      }
+      durationStr += ":"
+    }
+
+    if (minutes < 10) {
+      durationStr += "0" + minutes;
+    } else {
+      durationStr += minutes;
+    }
+
+    durationStr += ":";
+    
+    if (seconds < 10) {
+      durationStr += "0" + seconds;
+    } else {
+      durationStr += seconds;
+    }
+    this.soundDuration = durationStr;
   }
 
   soundButtonClicked() {
