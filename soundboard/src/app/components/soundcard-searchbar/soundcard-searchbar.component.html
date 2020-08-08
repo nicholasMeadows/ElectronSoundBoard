@@ -7,6 +7,6 @@
 <button mat-raised-button color="warn" (click)="seachButtonClicked()" style="height: 4em;">
     <mat-icon >search</mat-icon>
     <mat-form-field *ngIf="showSearch" style="padding-left: 10px;">
-        <input id="SearchInput" matInput type="search" [(ngModel)]="currentSearch" (ngModelChange)="searchBarChanged()" (click)="inputClickEvent($event)">
+        <input #searchInput id="SearchInput" matInput type="search" [(ngModel)]="currentSearch" (ngModelChange)="searchBarChanged()" (click)="inputClickEvent($event)">
     </mat-form-field>
 </button>

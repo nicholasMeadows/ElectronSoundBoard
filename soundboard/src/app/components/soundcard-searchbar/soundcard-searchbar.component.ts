@@ -1,5 +1,5 @@
 import { SoundcardSearchService } from './../../services/soundcard-searchbar.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-soundcard-searchbar',
@@ -9,7 +9,11 @@ import { Component, OnInit } from '@angular/core';
 export class SoundcardSearchbarComponent implements OnInit {
   currentSearch: string;
   showSearch:boolean = false;
-  constructor(private searchService: SoundcardSearchService) { }
+
+  @ViewChild('searchInput')
+  searchInputElement: ElementRef;
+
+  constructor(private searchService: SoundcardSearchService, private cd: ChangeDetectorRef) { }
 
   ngOnInit(): void {
   }
@@ -24,6 +28,9 @@ export class SoundcardSearchbarComponent implements OnInit {
     if(!this.showSearch){
       this.currentSearch = "";
       this.searchBarChanged();
+    } else {
+      this.cd.detectChanges();
+      this.searchInputElement.nativeElement.focus();
     }
   }
 
