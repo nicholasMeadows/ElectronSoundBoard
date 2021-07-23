@@ -61,7 +61,8 @@ export class SoundcardComponent implements OnInit {
     this.soundDuration = durationStr;
   }
 
-  soundButtonClicked() {
+  soundButtonClicked(event) {
+    event.stopPropagation();
     this.soundcard.isCurrentlyPlaying = !this.soundcard.isCurrentlyPlaying;
     if (this.soundcard.isCurrentlyPlaying) {
       this.soundCardService.play(this.soundcard);
