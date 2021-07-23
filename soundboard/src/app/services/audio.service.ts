@@ -1,24 +1,27 @@
+import { SoundCard } from './../models/soundcard';
 import { IpcService } from '../services/ipc-service.service';
 
 import { Observable, Subscriber } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { AudioDevice } from '../models/audiodevice';
-import { SoundCard } from '../models/soundcard';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class AudioService {
-
-  currentlyPlayingSoundCard: SoundCard;
+  currentDeviceId: string;
+  // currentlyPlayingSoundCard: SoundCard;
+  currentlyPlayingSoundCards: SoundCard[] = [];
 
   audioFinishedSubscription: Subscriber<SoundCard>;
-  audioVolumeChangedSubscrition: Subscriber<number>;
+  audioVolumeChangedSubscrition: Subscriber<SoundCard>;
   audioStopPlayingSubscription: Subscriber<SoundCard>;
   audioStartPlayingSubscription: Subscriber<SoundCard>;
+  updateAudioDeviceIdSubscription: Subscriber<string>;
 
-  constructor(private ipcService: IpcService) {
-
+  constructor() {
+    
   }
 
   //Called in audio component to load available device list
@@ -44,7 +47,7 @@ export class AudioService {
   }
 
   //called in audio component to update volume
-  getAudioVolumeSubscription(): Observable<number> {
+  getAudioVolumeSubscription(): Observable<SoundCard> {
     return new Observable(obs => {
       this.audioVolumeChangedSubscrition = obs;
     })
@@ -64,32 +67,68 @@ export class AudioService {
     });
   }
 
+  getUpdateAudioDeviceIdSubscription(): Observable<string> {
+    return new Observable(obs => {
+      this.updateAudioDeviceIdSubscription = obs;
+    });
+  }
+
   //Called from main
   audioStartPlaying(soundCard: SoundCard) {
     // console.log('Inside audio Start Playing')
-    if (undefined != this.currentlyPlayingSoundCard) {
-      this.audioStopPlaying(this.currentlyPlayingSoundCard);
-    }
-    this.currentlyPlayingSoundCard = soundCard;
+
+    ///////////////////////OLD//////////////////
+    // if (undefined != this.currentlyPlayingSoundCard) {
+    //   this.audioStopPlaying(this.currentlyPlayingSoundCard);
+    // }
+    // this.currentlyPlayingSoundCard = soundCard;
+    // this.audioStartPlayingSubscription.next(soundCard);
+
+
+
+    //NEW
+    // if (undefined != this.currentlyPlayingSoundCard) {
+      // this.audioStopPlaying(this.currentlyPlayingSoundCard);
+    // }
+    // this.currentlyPlayingSoundCard = soundCard;
+    this.currentlyPlayingSoundCards.push(soundCard);
     this.audioStartPlayingSubscription.next(soundCard);
   }
 
   //Called from main
   audioStopPlaying(soundCard: SoundCard) {
-    this.currentlyPlayingSoundCard.isCurrentlyPlaying = false;
-    this.currentlyPlayingSoundCard = undefined;
+    // this.currentlyPlayingSoundCard.isCurrentlyPlaying = false;
+    // this.currentlyPlayingSoundCard = undefined;
+    console.log(soundCard);
+    console.log(this.currentlyPlayingSoundCards);
+
+    let index = this.currentlyPlayingSoundCards.findIndex(card => {
+      return card.runTimeId === soundCard.runTimeId;
+    });
+
+    if(index > -1){
+      this.currentlyPlayingSoundCards[index].isCurrentlyPlaying = false;
+      this.currentlyPlayingSoundCards.splice(index, 1);
+    }
+
     this.audioStopPlayingSubscription.next(soundCard);
   }
 
   //called from audio component
   audioFinished(soundCard: SoundCard) {
-    this.currentlyPlayingSoundCard = undefined;
+    // this.currentlyPlayingSoundCard = undefined;
+    let index = this.currentlyPlayingSoundCards.findIndex(sc => {
+      return sc.runTimeId === soundCard.runTimeId;
+    })
+    if(index > -1){
+      this.currentlyPlayingSoundCards.splice(index, 1);
+    }
     this.audioFinishedSubscription.next(soundCard);
   }
 
   // called from ipcService
-  audioVolumeChanged(volumeToSet: number) {
-    this.audioVolumeChangedSubscrition.next(volumeToSet);
+  audioVolumeChanged(soundCard: SoundCard) {
+    this.audioVolumeChangedSubscrition.next(soundCard);
   }
 
   getSoundDuration(soundFilePath): Observable<number> {
@@ -103,5 +142,10 @@ export class AudioService {
       }
       audio.src = soundFilePath;
     });
+  }
+
+  updateCurrentDeviceId(deviceId: string) {
+    this.currentDeviceId = deviceId;
+    this.updateAudioDeviceIdSubscription.next(this.currentDeviceId);
   }
 }

@@ -81,7 +81,7 @@ export class SoundcardService {
     console.log("Volume Changed called")
     this.updateConfig();
     if (soundCard.isCurrentlyPlaying) {
-      this.audioService.audioVolumeChanged(soundCard.currentVolume);
+      this.audioService.audioVolumeChanged(soundCard);
     }
   }
 

@@ -12,15 +12,20 @@
 </head>
 
 <body class="mat-typography">
-  <app-root></app-root>
   <script>
     const electron = require('electron');
     const { ipcRenderer } = electron;
-
-    ipcRenderer.on("audiodevice:updatecurrentdevice", (event, deviceId) => {
-      document.getElementById("audioPlayer").setSinkId(deviceId);
-    });
+    // ipcRenderer.on("audiodevice:updatecurrentdevice", (event, deviceId) => {
+    //   console.log('sinkId', deviceId);
+    //   // document.getElementById("audioPlayer").setSinkId(deviceId);
+    //   let audioPlayers = document.getElementsByTagName('audio');
+      
+    //   audioPlayers.forEach(plyr => {
+    //     plyr.setSinkId(deviceId);
+    //   });
+    // });
   </script>
+  <app-root [deviceId]="sinkId"></app-root>
 </body>
 
 </html>

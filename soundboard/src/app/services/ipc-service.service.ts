@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { IpcRenderer, IpcMain, ipcMain } from 'electron';
 import { Observable } from 'rxjs';
 import { SoundCard } from '../models/soundcard';
+import { AudioService } from './audio.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,10 +11,14 @@ export class IpcService {
 
   private ipc: IpcRenderer;
 
-  constructor() { 
+  constructor(audioService: AudioService) { 
     if ((<any>window).require) {
       try {
         this.ipc = (<any>window).require('electron').ipcRenderer;
+        this.ipc.on('audiodevice:updatecurrentdevice', (event, deviceId) => {
+          // obs.next(soundCard);
+          audioService.updateCurrentDeviceId(deviceId);
+        })
       } catch (error) {
         throw error;
       }
