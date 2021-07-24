@@ -1,3 +1,4 @@
+import { StopAllSoundsComponent } from './components/stop-all-sounds/stop-all-sounds.component';
 import { SoundcardSearchbarComponent } from './components/soundcard-searchbar/soundcard-searchbar.component';
 import { MainViewComponent } from './components/main-view/main-view.component';
 import { BrowserModule } from '@angular/platform-browser';
@@ -51,6 +52,7 @@ import { DeleteSoundcardDialogComponent } from './components/delete-soundcard-di
 import { EditSoundcardComponent } from './components/edit-soundcard/edit-soundcard.component';
 import { DefaultSoundcardViewComponent } from './components/default-soundcard-view/default-soundcard-view.component';
 import { SearchForSoundcardViewComponent } from './components/search-for-soundcard-view/search-for-soundcard-view.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -63,7 +65,8 @@ import { SearchForSoundcardViewComponent } from './components/search-for-soundca
     EditSoundcardComponent,
     SoundcardSearchbarComponent,
     DefaultSoundcardViewComponent,
-    SearchForSoundcardViewComponent
+    SearchForSoundcardViewComponent,
+    StopAllSoundsComponent
   ],
   imports: [
     BrowserModule,

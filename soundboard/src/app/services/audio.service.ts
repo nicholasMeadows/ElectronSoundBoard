@@ -99,8 +99,6 @@ export class AudioService {
   audioStopPlaying(soundCard: SoundCard) {
     // this.currentlyPlayingSoundCard.isCurrentlyPlaying = false;
     // this.currentlyPlayingSoundCard = undefined;
-    console.log(soundCard);
-    console.log(this.currentlyPlayingSoundCards);
 
     let index = this.currentlyPlayingSoundCards.findIndex(card => {
       return card.runTimeId === soundCard.runTimeId;

@@ -18,7 +18,7 @@ export class IpcService {
         this.ipc.on('audiodevice:updatecurrentdevice', (event, deviceId) => {
           // obs.next(soundCard);
           audioService.updateCurrentDeviceId(deviceId);
-        })
+        });
       } catch (error) {
         throw error;
       }
@@ -75,5 +75,37 @@ export class IpcService {
         obs.next(soundCard);
       });
     })
+  }
+
+  getPlayAllAudio(): Observable<void> {
+    return new Observable(obs => {
+      this.ipc.on("playAllClicked", (event) => {
+        obs.next();
+      });
+    });
+  }
+
+  getPlayRandom(): Observable<void> {
+    return new Observable(obs => {
+      this.ipc.on("playRandomClicked", (event) => {
+        obs.next();
+      });
+    });
+  }
+
+  getPlay10Random(): Observable<void> {
+    return new Observable(obs => {
+      this.ipc.on("play10RandomClicked", (event) => {
+        obs.next();
+      });
+    });
+  }
+
+  getPlayEarRape(): Observable<void> {
+    return new Observable(obs => {
+      this.ipc.on("playEarRapeClicked", (event) => {
+        obs.next();
+      });
+    });
   }
 }

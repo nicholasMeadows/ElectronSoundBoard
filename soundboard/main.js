@@ -4,7 +4,7 @@ const ConfigUtil = require('./ConfigUtil.ts');
 let configUtil = new ConfigUtil();
 
 let fs = require('fs');
-const { app, BrowserWindow, Menu, ipcMain, IpcMessageEvent } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, IpcMessageEvent, webContents } = require('electron');
 const { pathToFileURL } = require('url');
 
 let streamDeckWebSocket = new CustomWebSocket(configUtil, startPlayingAudio, stopPlayingAudio);
@@ -76,6 +76,35 @@ const mainMenuTemplate = [
         }
       }
     ]
+  },{
+    label: "Options",
+    submenu: [
+      {
+        label: "Play All",
+        accelerator: process.platform == 'darwin' ? 'Command+W' : 'Ctrl+W',
+        click() {
+          playAllClicked();
+        }
+      },{
+        label: "Play Random",
+        accelerator: process.platform == 'darwin' ? 'Command+W' : 'Ctrl+E',
+        click() {
+          playRandomClicked();
+        }
+      },{
+        label: "Play 10 Random",
+        accelerator: process.platform == 'darwin' ? 'Command+W' : 'Ctrl+R',
+        click() {
+          play10RandomClicked();
+        }
+      },{
+        label: "Play All EarRape",
+        accelerator: process.platform == 'darwin' ? 'Command+W' : 'Ctrl+T',
+        click() {
+          playEarRapeClicked();
+        }
+      }
+    ]
   }
 ];
 
@@ -109,6 +138,21 @@ function stopPlayingAudio(soundCard){
 
 
 //IPC Events!!!
+function playAllClicked() {
+  win.webContents.send("playAllClicked");
+}
+
+function playRandomClicked() {
+  win.webContents.send("playRandomClicked");
+}
+function play10RandomClicked() {
+  win.webContents.send("play10RandomClicked");
+}
+
+function playEarRapeClicked() {
+  win.webContents.send("playEarRapeClicked");
+}
+
 ipcMain.on('config:loadConfig', (event, args)=> {
   let config = configUtil.readConfigFile();
   event.reply('config:loadConfigResponse', config);

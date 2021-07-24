@@ -1,6 +1,7 @@
 <div  style="position: fixed; z-index: 100; top: 10px; right: 10px;">
+    <app-stop-all-sounds style="float:left; margin-right: 10px;"></app-stop-all-sounds>
     <app-soundcard-searchbar style="margin-right: 10px;"></app-soundcard-searchbar>
-    <app-add-new-soundcard-button style="float: right;"></app-add-new-soundcard-button>
+    <app-add-new-soundcard-button style="float: right;"></app-add-new-soundcard-button>    
 </div>
 <app-search-for-soundcard-view *ngIf="isSearching"></app-search-for-soundcard-view>
 <app-default-soundcard-view *ngIf="!isSearching"></app-default-soundcard-view>
