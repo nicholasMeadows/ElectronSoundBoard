@@ -101,4 +101,10 @@ export class AddNewSoundcardDialogComponent implements OnInit {
   onCancelClick() {
     this.dialogRef.close();
   }
+
+  fileSelectionOnChange(index, event) {
+    this.soundCardWithValidationArr[index].soundFilePath = event.target.files[0].path;
+    this.validateSoundFile(this.soundCardWithValidationArr[index]);
+    this.cd.detectChanges();
+  }
 }

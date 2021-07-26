@@ -92,7 +92,8 @@ export class SoundcardComponent implements OnInit {
     });
   }
 
-  handleDeleteClicked() {
+  handleDeleteClicked(event) {
+    event.stopPropagation();
     const dialogRef = this.dialog.open(DeleteSoundcardDialogComponent, { width: '300px', data: this.soundcard });
     dialogRef.afterClosed().subscribe(shouldDelete => {
       if (shouldDelete) {

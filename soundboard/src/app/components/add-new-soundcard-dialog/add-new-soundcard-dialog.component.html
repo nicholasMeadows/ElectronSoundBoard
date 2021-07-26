@@ -18,6 +18,7 @@
         <!-- (keyup)="validateSoundFileField(soundCardWithValidation)" -->
         <input type="text" #soundFilePath="ngModel" name="soundFilePath" style="width: 100%" (keyup)="validateSoundFile(soundCardWithValidation)" [(ngModel)]="soundCardWithValidation.soundFilePath" />
         <!-- <i *ngIf="(!validateSoundFileField(soundCardWithValidation) || !soundCardWithValidation.isSoundFileValid) && (soundFilePath.dirty || soundFilePath.touched) " class="errorSpan" >{{soundCardWithValidation.soundFileInvalidMessage}}</i> -->
+        <input type="file" value="Select Sound" (change)="fileSelectionOnChange(currentIndex, $event)" style="margin-top: 10px;" accept="audio/mp3, audio/wav"/>
         <i *ngIf="(isSoundFildFieldEmpty(soundCardWithValidation) || !soundCardWithValidation.isSoundFileValid) && (soundFilePath.dirty || soundFilePath.touched)"  class="errorSpan" >{{soundCardWithValidation.soundFileInvalidMessage}}</i>
         
         <button mat-raised-button color="warn" style="float: right; margin-top: 10px" (click)="removeCardFromList(soundCardWithValidation,currentIndex)">Delete</button>
@@ -25,6 +26,6 @@
 </div>
 
 <div style="margin-top: 10px;">
-    <button mat-raised-button color="primary" [mat-dialog-close]="getSoundCardArrForSubmission()" cdkFocusInitial [disabled]="!canSubmit()">Ok</button>
+    <button mat-raised-button color="primary" [mat-dialog-close]="getSoundCardArrForSubmission()" cdkFocusInitial [disabled]="!canSubmit()" style="margin-right: 10px;">Ok</button>
     <button mat-raised-button (click)="onCancelClick()">Cancel</button>
 </div>
