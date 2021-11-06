@@ -71,19 +71,23 @@ export class SoundcardComponent implements OnInit {
     }
   }
 
-  isFavoriteChange() {
+  isFavoriteChange(event) {
+    event.stopPropagation();
     this.soundCardService.updateConfig();
   }
 
-  showOnStreamDeckChange() {
+  showOnStreamDeckChange(event) {
+    event.stopPropagation();
     this.soundCardService.showOnStreamDeckChanged(this.soundcard);
   }
 
-  volumeChanged() {
+  volumeChanged(event) {
+    event.stopPropagation();
     this.soundCardService.volumeChange(this.soundcard);
   }
 
-  handleEditClicked() {
+  handleEditClicked(event) {
+    event.stopPropagation();
     const dialogRef = this.dialog.open(EditSoundcardComponent, { width: "300px", data: this.soundcard });
     dialogRef.afterClosed().subscribe(editedSoundCard => {
       if (undefined != editedSoundCard) {
