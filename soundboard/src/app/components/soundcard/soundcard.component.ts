@@ -62,7 +62,7 @@ export class SoundcardComponent implements OnInit {
   }
 
   soundButtonClicked(event) {
-    event.stopPropagation();
+    event.preventDefault();
     this.soundcard.isCurrentlyPlaying = !this.soundcard.isCurrentlyPlaying;
     if (this.soundcard.isCurrentlyPlaying) {
       this.soundCardService.play(this.soundcard);
@@ -72,22 +72,22 @@ export class SoundcardComponent implements OnInit {
   }
 
   isFavoriteChange(event) {
-    event.stopPropagation();
+    event.preventDefault();
     this.soundCardService.updateConfig();
   }
 
   showOnStreamDeckChange(event) {
-    event.stopPropagation();
+    event.preventDefault();
     this.soundCardService.showOnStreamDeckChanged(this.soundcard);
   }
 
   volumeChanged(event) {
-    event.stopPropagation();
+    event.preventDefault();
     this.soundCardService.volumeChange(this.soundcard);
   }
 
   handleEditClicked(event) {
-    event.stopPropagation();
+    event.preventDefault();
     const dialogRef = this.dialog.open(EditSoundcardComponent, { width: "300px", data: this.soundcard });
     dialogRef.afterClosed().subscribe(editedSoundCard => {
       if (undefined != editedSoundCard) {
@@ -97,7 +97,7 @@ export class SoundcardComponent implements OnInit {
   }
 
   handleDeleteClicked(event) {
-    event.stopPropagation();
+    event.preventDefault();
     const dialogRef = this.dialog.open(DeleteSoundcardDialogComponent, { width: '300px', data: this.soundcard });
     dialogRef.afterClosed().subscribe(shouldDelete => {
       if (shouldDelete) {
