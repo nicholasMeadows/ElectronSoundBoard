@@ -23,7 +23,6 @@ export class SoundcardComponent implements OnInit {
   ngOnInit(): void {
     this.audioService.getSoundDuration(this.soundcard.soundFilePath).subscribe(duration => {
       this.formatDuration(duration);
-      // console.log(this.soundcard.soundFilePath, ' Duration: ', leng)
     });
   }
 
@@ -52,7 +51,7 @@ export class SoundcardComponent implements OnInit {
     }
 
     durationStr += ":";
-    
+
     if (seconds < 10) {
       durationStr += "0" + seconds;
     } else {
@@ -61,19 +60,22 @@ export class SoundcardComponent implements OnInit {
     this.soundDuration = durationStr;
   }
 
-  soundButtonClicked(event) {
+  playButtonClicked(event) {
     event.stopPropagation();
-    this.soundcard.isCurrentlyPlaying = !this.soundcard.isCurrentlyPlaying;
-    if (this.soundcard.isCurrentlyPlaying) {
-      this.soundCardService.play(this.soundcard);
-    } else {
-      this.soundCardService.stopPlaying(this.soundcard);
+    if (!this.soundcard.isCurrentlyPlaying) {
+      this.soundcard.isCurrentlyPlaying = !this.soundcard.isCurrentlyPlaying;
     }
+    this.soundCardService.play(this.soundcard);
+  }
+
+  stopAllButtonClicked(event) {
+    event.stopPropagation();
+    this.soundCardService.stopPlaying(this.soundcard);
   }
 
   isFavoriteChange(event: MouseEvent) {
     event.stopImmediatePropagation();
-    // this.soundCardService.updateConfig();
+    this.soundCardService.updateConfig();
   }
 
   showOnStreamDeckChange(event) {
@@ -82,7 +84,6 @@ export class SoundcardComponent implements OnInit {
   }
 
   volumeChanged(event) {
-    event.stopPropagation();
     this.soundCardService.volumeChange(this.soundcard);
   }
 

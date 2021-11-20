@@ -1,5 +1,5 @@
 <mat-card [ngStyle]="{'background-color': soundcard.isCurrentlyPlaying ? 'green' : 'lightgrey'}" style="width: 200px; "
-    (click)="soundButtonClicked($event)">
+    (click)="playButtonClicked($event)">
     <div style="padding-bottom: 10px;" (click)="$event.stopPropagation()">
         <button mat-raised-button (click)="handleEditClicked($event)">
             <mat-icon style="margin-left: -5px;">edit</mat-icon>
@@ -26,5 +26,8 @@
                 [(ngModel)]="soundcard.currentVolume"></mat-slider>
         </p>
     </div>
-    <button (click)="soundButtonClicked($event)">{{soundcard.isCurrentlyPlaying ? 'Stop': 'Play'}}</button>
+    <!-- <button (click)="soundButtonClicked($event)">{{soundcard.isCurrentlyPlaying ? 'Stop': 'Play'}}</button> -->
+
+    <button (click)="playButtonClicked($event)">Play</button>
+    <button (click)="stopAllButtonClicked($event)" style="float:right">Stop All</button>
 </mat-card>

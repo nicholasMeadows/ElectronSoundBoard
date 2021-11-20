@@ -11,8 +11,6 @@ import { AudioDevice } from '../models/audiodevice';
 })
 export class AudioService {
   currentDeviceId: string;
-  // currentlyPlayingSoundCard: SoundCard;
-  currentlyPlayingSoundCards: SoundCard[] = [];
 
   audioFinishedSubscription: Subscriber<SoundCard>;
   audioVolumeChangedSubscrition: Subscriber<SoundCard>;
@@ -20,9 +18,9 @@ export class AudioService {
   audioStartPlayingSubscription: Subscriber<SoundCard>;
   updateAudioDeviceIdSubscription: Subscriber<string>;
 
-  constructor() {
+  // constructor() {
     
-  }
+  // }
 
   //Called in audio component to load available device list
   getAudioOutputDevices(): Observable<AudioDevice[]> {
@@ -75,52 +73,16 @@ export class AudioService {
 
   //Called from main
   audioStartPlaying(soundCard: SoundCard) {
-    // console.log('Inside audio Start Playing')
-
-    ///////////////////////OLD//////////////////
-    // if (undefined != this.currentlyPlayingSoundCard) {
-    //   this.audioStopPlaying(this.currentlyPlayingSoundCard);
-    // }
-    // this.currentlyPlayingSoundCard = soundCard;
-    // this.audioStartPlayingSubscription.next(soundCard);
-
-
-
-    //NEW
-    // if (undefined != this.currentlyPlayingSoundCard) {
-      // this.audioStopPlaying(this.currentlyPlayingSoundCard);
-    // }
-    // this.currentlyPlayingSoundCard = soundCard;
-    this.currentlyPlayingSoundCards.push(soundCard);
     this.audioStartPlayingSubscription.next(soundCard);
   }
 
   //Called from main
   audioStopPlaying(soundCard: SoundCard) {
-    // this.currentlyPlayingSoundCard.isCurrentlyPlaying = false;
-    // this.currentlyPlayingSoundCard = undefined;
-
-    let index = this.currentlyPlayingSoundCards.findIndex(card => {
-      return card.runTimeId === soundCard.runTimeId;
-    });
-
-    if(index > -1){
-      this.currentlyPlayingSoundCards[index].isCurrentlyPlaying = false;
-      this.currentlyPlayingSoundCards.splice(index, 1);
-    }
-
     this.audioStopPlayingSubscription.next(soundCard);
   }
 
   //called from audio component
   audioFinished(soundCard: SoundCard) {
-    // this.currentlyPlayingSoundCard = undefined;
-    let index = this.currentlyPlayingSoundCards.findIndex(sc => {
-      return sc.runTimeId === soundCard.runTimeId;
-    })
-    if(index > -1){
-      this.currentlyPlayingSoundCards.splice(index, 1);
-    }
     this.audioFinishedSubscription.next(soundCard);
   }
 

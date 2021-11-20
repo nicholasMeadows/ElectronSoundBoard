@@ -42,8 +42,6 @@ export class SoundcardService {
       soundCard.isCurrentlyPlaying = false;
       this.streamDeckService.sendStopPlayingToStreamDeck(soundCard);
     });
-
-
     
     this.settingsService.getConfig().subscribe(config => {
       let soundcards = config.soundCards;
@@ -116,8 +114,10 @@ export class SoundcardService {
   }
 
   stopPlaying(soundcard: SoundCard) {
+    console.log("Stop Playing called");
     this.audioService.audioStopPlaying(soundcard);
     this.streamDeckService.sendStopAudioToStreamDeck(soundcard);
+    soundcard.isCurrentlyPlaying = false;
   }
 
   stopPlayingAll(){
