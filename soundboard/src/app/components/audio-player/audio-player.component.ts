@@ -10,7 +10,7 @@ import { DOCUMENT } from '@angular/common';
   styleUrls: ['./audio-player.component.css']
 })
 export class AudioPlayerComponent implements OnInit {
-  audioPlayers: Map<String, Map<Number, HTMLAudioElement>> = new Map();
+  audioPlayers: Map<String, Map<number, HTMLAudioElement>> = new Map();
   currentDeviceId: string;
 
   constructor(private ipcService: IpcService, private audioService: AudioService, @Inject(DOCUMENT) private document: Document) {
@@ -70,7 +70,13 @@ export class AudioPlayerComponent implements OnInit {
         audioInstancesMap = new Map();
         this.audioPlayers.set(soundCardRuntimeId, audioInstancesMap);
       }
-      let instanceNumber = audioInstancesMap.size;
+
+      let instanceNumber = 0;
+      audioInstancesMap.forEach((audioPlayer, playerInstance)=> {
+        if(instanceNumber <= playerInstance){
+          instanceNumber = playerInstance+1;
+        }
+      });
 
       let audioPlr = this.document.createElement('audio');
       audioPlr.src = soundCard.soundFilePath;
