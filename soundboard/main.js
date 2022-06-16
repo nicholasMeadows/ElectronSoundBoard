@@ -153,8 +153,58 @@ function playEarRapeClicked() {
   win.webContents.send("playEarRapeClicked");
 }
 
+function cleanAndUpdateConfig(config) {
+  let soundCardSearchDir = config.soundCardSearchDir;
+  let dirArr = fs.readdirSync(soundCardSearchDir);
+  dirArr.forEach(dir => {
+    if (dir != '$RECYCLE.BIN' && fs.lstatSync(soundCardSearchDir + '\\' + dir).isDirectory()) {
+      let files = fs.readdirSync(soundCardSearchDir + '\\' + dir);
+      files.forEach(file => {
+        if (file.endsWith('.mp3') || file.endsWith('.wav')) {
+          let completeFile = soundCardSearchDir + '\\' + dir + '\\' + file;
+
+          let index = config.soundCards.findIndex(sound => {
+            return sound.soundFilePath == completeFile
+          });
+
+          if (index < 0) {
+            console.log('file not in config', completeFile)
+
+            let dirSplit = completeFile.split("\\");
+            let fileNameWithExtension = dirSplit[dirSplit.length -1];
+            let fileNameWithoutExtension = fileNameWithExtension.substring(0,fileNameWithExtension.length -4);
+
+            let soundObjToAdd = {
+                "runTimeId": 0,
+                "title": fileNameWithoutExtension,
+                "soundFilePath": completeFile,
+                "category": dirSplit[dirSplit.length-2],
+                "isFavorite": false,
+                "showOnStreamDeck": false,
+                "isCurrentlyPlaying": false,
+                "currentVolume": 0.8
+            }
+            config.soundCards.push(soundObjToAdd);
+          }
+        }
+      })
+    }
+  })
+
+  let correctedSounds = [];
+  config.soundCards.forEach(sound => {
+    if(fs.existsSync(sound.soundFilePath)){
+      correctedSounds.push(sound);
+    }
+  })
+  config.soundCards = correctedSounds;
+
+  configUtil.writeConfigFile(config);
+}
+
 ipcMain.on('config:loadConfig', (event, args)=> {
   let config = configUtil.readConfigFile();
+  cleanAndUpdateConfig(config);
   event.reply('config:loadConfigResponse', config);
 });
 
