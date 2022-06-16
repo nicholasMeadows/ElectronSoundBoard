@@ -1,4 +1,4 @@
-<mat-card [ngStyle]="{'background-color': soundcard.isCurrentlyPlaying ? 'green' : 'lightgrey'}" style="width: 200px; "
+<mat-card [ngStyle]="{'background-color': soundcard.isCurrentlyPlaying ? 'green' : 'darkgray'}" style="width: 200px; "
     (click)="playButtonClicked($event)">
     <div style="padding-bottom: 10px;" (click)="$event.stopPropagation()">
         <button mat-raised-button (click)="handleEditClicked($event)">
