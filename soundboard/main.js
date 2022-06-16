@@ -1,12 +1,11 @@
 const CustomWebSocket = require('./StreamDeckWebSocket.ts');
 const ConfigUtil = require('./ConfigUtil.ts');
 
-let configUtil = new ConfigUtil();
-
 let fs = require('fs');
-const { app, BrowserWindow, Menu, ipcMain, IpcMessageEvent, webContents } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, IpcMessageEvent, webContents, shell } = require('electron');
 const { pathToFileURL } = require('url');
 
+let configUtil = new ConfigUtil(app.getPath("appData"), app.name, app.getPath("music"));
 let streamDeckWebSocket = new CustomWebSocket(configUtil, startPlayingAudio, stopPlayingAudio);
 
 let audioMenuLabel = 'Audio Devices';
@@ -102,6 +101,11 @@ const mainMenuTemplate = [
         accelerator: process.platform == 'darwin' ? 'Command+W' : 'Ctrl+T',
         click() {
           playEarRapeClicked();
+        }
+      },{
+        label: "Open Discord API Sound Page",
+        click() {
+          shell.openPath('microsoft-edge:http://discordbotserver:9000/SoundboardBotRequestSite/')
         }
       }
     ]
