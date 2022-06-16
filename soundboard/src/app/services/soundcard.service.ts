@@ -149,27 +149,6 @@ export class SoundcardService {
     this.updateStreamDeck();
   }
 
-  deleteSoundCard(soundCard: SoundCard) {
-    console.log("Inside handle Delete")
-    let indexFoundAt = 0;
-
-    for (let [index, card] of this.soundcards.entries()) {
-      if (card.runTimeId == soundCard.runTimeId) {
-        indexFoundAt = index;
-        if (card.showOnStreamDeck) {
-          card.showOnStreamDeck = false;
-          this.showOnStreamDeckChanged(card);
-        }
-        if (card.isCurrentlyPlaying) {
-          this.stopPlaying(card);
-        }
-      }
-    }
-
-    this.soundcards.splice(indexFoundAt, 1);
-    this.updateConfig();
-  }
-
   showOnStreamDeckChanged(soundcard: SoundCard) {
     this.updateConfig();
     this.updateStreamDeck();

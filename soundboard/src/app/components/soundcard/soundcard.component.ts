@@ -2,7 +2,6 @@ import { SoundcardService } from './../../services/soundcard.service';
 import { AudioService } from './../../services/audio.service';
 
 import { EditSoundcardComponent } from './../edit-soundcard/edit-soundcard.component';
-import { DeleteSoundcardDialogComponent } from './../delete-soundcard-dialog/delete-soundcard-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { SoundCard } from './../../models/soundcard';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
@@ -95,15 +94,5 @@ export class SoundcardComponent implements OnInit {
         this.soundCardService.editSoundCard(editedSoundCard);
       }
     });
-  }
-
-  handleDeleteClicked(event) {
-    event.stopPropagation();
-    const dialogRef = this.dialog.open(DeleteSoundcardDialogComponent, { width: '300px', data: this.soundcard });
-    dialogRef.afterClosed().subscribe(shouldDelete => {
-      if (shouldDelete) {
-        this.soundCardService.deleteSoundCard(this.soundcard);
-      }
-    })
   }
 }
