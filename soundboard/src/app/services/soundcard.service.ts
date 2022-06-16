@@ -136,15 +136,6 @@ export class SoundcardService {
     }
   }
 
-  addNewCards(soundCards: SoundCard[]) {
-    soundCards.forEach(card => {
-      card.runTimeId = this.runTimeId;
-      this.runTimeId++;
-    });
-    this.soundcards.push(...soundCards);
-    this.updateConfig();
-    this.sortSoundCards(this.soundcards);
-  }
 
   editSoundCard(editedSoundCard: SoundCard) {
     let runtimeId = editedSoundCard.runTimeId;

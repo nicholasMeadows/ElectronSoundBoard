@@ -45,8 +45,6 @@ import { MatTreeModule } from '@angular/material/tree';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
-import { AddNewSoundcardButtonComponent } from './components/add-new-soundcard/add-new-soundcard-button.component';
-import { AddNewSoundcardDialogComponent } from './components/add-new-soundcard-dialog/add-new-soundcard-dialog.component';
 import { AudioPlayerComponent } from './components/audio-player/audio-player.component';
 import { DeleteSoundcardDialogComponent } from './components/delete-soundcard-dialog/delete-soundcard-dialog.component';
 import { EditSoundcardComponent } from './components/edit-soundcard/edit-soundcard.component';
@@ -58,8 +56,6 @@ import { SearchForSoundcardViewComponent } from './components/search-for-soundca
     AppComponent,
     MainViewComponent,
     SoundcardComponent,
-    AddNewSoundcardButtonComponent,
-    AddNewSoundcardDialogComponent,
     AudioPlayerComponent,
     DeleteSoundcardDialogComponent,
     EditSoundcardComponent,
