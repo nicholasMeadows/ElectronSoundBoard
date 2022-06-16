@@ -145,7 +145,7 @@ export class SoundcardService {
       foundCards[0].category = editedSoundCard.category;
       foundCards[0].soundFilePath = editedSoundCard.soundFilePath;
     }
-    this.updateConfig();
+    this.updateSound(editedSoundCard);
     this.updateStreamDeck();
   }
 
@@ -176,5 +176,10 @@ export class SoundcardService {
   updateConfig() {
     console.log("Updating the config with values:", this.soundcards);
     this.settingsService.updateConfig(this.soundcards);
+  }
+
+  updateSound(editedSoundCard: SoundCard){
+    console.log("Updating the sound with values:", editedSoundCard);
+    this.settingsService.updateSound(editedSoundCard);
   }
 }

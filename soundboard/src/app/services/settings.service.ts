@@ -23,4 +23,8 @@ export class SettingsService {
   updateConfig(soundcards: SoundCard[]) {
     this.ipcService.sendData("config:updateConfig", soundcards);
   }
+
+  updateSound(editedSoundCard: SoundCard) {
+    this.ipcService.sendData("config:updateSound", editedSoundCard);
+  }
 }

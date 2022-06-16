@@ -216,6 +216,10 @@ ipcMain.on('config:updateConfig', (event, soundcards) => {
   configUtil.updateSoundCardsInConfig(soundcards);
 });
 
+ipcMain.on('config:updateSound', (event, editedSoundCard) => {
+  configUtil.updateSoundCard(editedSoundCard);
+});
+
 ipcMain.on("audiodevice:audiodevicelist", (event, args) => {
   let audioDeviceSubMenu = [];
   args.forEach(device => {

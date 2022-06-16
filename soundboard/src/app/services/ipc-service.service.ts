@@ -51,16 +51,6 @@ export class IpcService {
     });
   }
 
-  checkIfSoundFileIsvalid(soundFile: string): Observable<boolean>{
-    return new Observable(obs => {
-      this.ipc.once('file:checkIfFileExistsResponse', (event, result) => {
-
-        obs.next(result);
-      });
-      this.ipc.send('file:checkIfFileExists', soundFile);
-    });
-  }
-
   getStreamDeckStartAudio():Observable<SoundCard> {
     return new Observable(obs => {
       this.ipc.on("streamdeckstartaudio", (event, soundCard) => {
