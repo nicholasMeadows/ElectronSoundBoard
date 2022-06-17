@@ -13,13 +13,20 @@ export class SoundcardSearchbarComponent implements OnInit {
   @ViewChild('searchInput')
   searchInputElement: ElementRef;
 
+  searchBarChangedTimeout: NodeJS.Timeout;
+
   constructor(private searchService: SoundcardSearchService, private cd: ChangeDetectorRef) { }
 
   ngOnInit(): void {
   }
 
   searchBarChanged(){
-    this.searchService.updateSearchCriteria(this.currentSearch);
+    clearTimeout(this.searchBarChangedTimeout);
+    this.searchBarChangedTimeout = setTimeout(() => {
+      if(this.currentSearch.length > 3 || this.currentSearch.length == 0) {
+        this.searchService.updateSearchCriteria(this.currentSearch);
+      }      
+    }, 200);    
   }
 
   seachButtonClicked(){
