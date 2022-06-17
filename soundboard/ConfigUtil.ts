@@ -31,6 +31,50 @@ class ConfigUtil {
         this.writeConfigFile(configObj);
     }
 
+    updateSoundCard(editedSoundCard) {
+        let currentConfig = this.readConfigFile();
+        
+        let foundSoundCardIndex = currentConfig.soundCards.findIndex(sound => {
+            return editedSoundCard.runTimeId == sound.runTimeId;
+        });
+        let foundSoundCard = currentConfig.soundCards[foundSoundCardIndex];
+
+        if(foundSoundCard != undefined) {
+            if(editedSoundCard.category != foundSoundCard.category) {
+                let categoryFolderDir = currentConfig.soundCardSearchDir + "/" +editedSoundCard.category;
+                if(!fs.existsSync(categoryFolderDir)) {
+                    fs.mkdirSync(categoryFolderDir, {recursive:true});
+                }
+            }
+
+            let updatedSoundFile = editedSoundCard.soundFilePath
+            let oldSoundFile = foundSoundCard.soundFilePath
+            fs.rename(oldSoundFile, updatedSoundFile, (err) => {
+                if(err) throw err;
+                console.log('Successfully moved' + foundSoundCard.soundFilePath + " to "+editedSoundCard.soundFilePath)
+
+                let oldSoundFilePathSplit = oldSoundFile.split("\\");
+                oldSoundFilePathSplit.pop();
+                let oldSoundFilePathParentFolder  = oldSoundFilePathSplit.join("\\");
+                let existingFilesInOldFolder = fs.readdirSync(oldSoundFilePathParentFolder)
+                let filteredSoundsInOldFolder = existingFilesInOldFolder.filter(file => {
+                    if(file.endsWith('.mp3') || file.endsWith(".wav")) {
+                        return true;
+                    }
+                    return false;
+                })
+
+                if(filteredSoundsInOldFolder.length == 0){
+                    fs.rmdirSync(oldSoundFilePathParentFolder, {recursive: true})
+                }
+            });
+
+
+            currentConfig.soundCards[foundSoundCardIndex] = editedSoundCard;
+            this.writeConfigFile(currentConfig);
+        }
+    }
+
     updateAudioDeviceIdInConfig(deviceId) {
         let configObj = this.readConfigFile();
         configObj.audioDeviceId = deviceId;

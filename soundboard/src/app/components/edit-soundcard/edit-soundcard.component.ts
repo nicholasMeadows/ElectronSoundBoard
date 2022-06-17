@@ -17,12 +17,11 @@ export class EditSoundcardComponent implements OnInit {
   constructor(@Inject(MAT_DIALOG_DATA) private soundCard: SoundCard, 
   private dialogRef: MatDialogRef<EditSoundcardComponent>, 
   private ipcService: IpcService, private cd: ChangeDetectorRef) {
-    this.soundCardWithValidation = new SoundCardWithValidationData(soundCard, false, "", false, "", false, "");
+    this.soundCardWithValidation = new SoundCardWithValidationData(soundCard, false, "", false, "", "");
     this.soundCardWithValidation.titleInvalidMessage
   }
 
   ngOnInit(): void {
-    this.validateSoundFile();
   }
 
   validateTitleInput() {
@@ -52,6 +51,15 @@ export class EditSoundcardComponent implements OnInit {
     } else {
       isValid = true;
       msg = "";
+
+      let invalidCategoryCharacters = ['<','>',':','\"','/','\\','|','?','*', '.'];
+      for(let i = 0; i < invalidCategoryCharacters.length; ++i){
+        if(this.soundCardWithValidation.category.includes(invalidCategoryCharacters[i])){
+          isValid = false;
+          msg = "Invalid character " + invalidCategoryCharacters[i];
+          break;
+        }
+      }      
     }
 
     this.soundCardWithValidation.isCategoryValid = isValid;
@@ -59,48 +67,13 @@ export class EditSoundcardComponent implements OnInit {
     return isValid;
   }
 
-  validateSoundFile() {
-    let isValid = false;
-    let msg = "";
-
-    let soundFilePath = this.soundCardWithValidation.soundFilePath;
-
-    if (soundFilePath.trim().length == 0) {
-      isValid = false;
-      msg = "File path is required"
-    } else {
-      if (!soundFilePath.endsWith(".mp3") && !soundFilePath.endsWith(".wav")) {
-        isValid = false;
-        msg = "File must be a .mp3 or .wav"
-      } else {
-
-        this.ipcService.checkIfSoundFileIsvalid(soundFilePath).subscribe(res => {
-          if (res) {
-            isValid = true;
-            msg = "";
-          } else {
-            isValid = false;
-            msg = "File is not found";
-          }
-
-          this.soundCardWithValidation.isSoundFileValid = isValid;
-          this.soundCardWithValidation.soundFileInvalidMessage = msg;
-          this.cd.detectChanges();
-        });
-      }
-    }
-
-    this.soundCardWithValidation.isSoundFileValid = isValid;
-    this.soundCardWithValidation.soundFileInvalidMessage = msg;
-  }
 
   canSubmit(){
 
-    let isFileValid = this.soundCardWithValidation.isSoundFileValid;
     let categoryValid:boolean = this.validateCategory();
     let isTitleValid:boolean = this.validateTitleInput();
 
-    if(categoryValid && isTitleValid && this.soundCardWithValidation.isSoundFileValid){
+    if(categoryValid && isTitleValid){
       return true;
     }
     return false;
@@ -110,8 +83,19 @@ export class EditSoundcardComponent implements OnInit {
     let title = this.soundCardWithValidation.title;
     let category = this.soundCardWithValidation.category;
     let filePath = this.soundCardWithValidation.soundFilePath;
+    
+    let filePathSplit = filePath.split("\\");
+    let completeFileName = filePathSplit[filePathSplit.length-1];
+    let extension = completeFileName.substring(completeFileName.length -4, completeFileName.length);
 
-    this.dialogRef.close(new SoundCard(this.soundCard.runTimeId, title, filePath, category, this.soundCard.isFavorite, this.soundCard.showOnStreamDeck, this.soundCard.isCurrentlyPlaying, this.soundCard.currentVolume));
+    let updatedFileNameWithExtension = title + extension;
+
+    filePathSplit.pop();
+    filePathSplit.pop();
+
+    let updateFilePath = filePathSplit.join("\\") + "\\"+ category+"\\"+updatedFileNameWithExtension;
+
+    this.dialogRef.close(new SoundCard(this.soundCard.runTimeId, title, updateFilePath, category, this.soundCard.isFavorite, this.soundCard.showOnStreamDeck, this.soundCard.isCurrentlyPlaying, this.soundCard.currentVolume));
   }
 
   cancleUpdate() {

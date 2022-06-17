@@ -136,15 +136,6 @@ export class SoundcardService {
     }
   }
 
-  addNewCards(soundCards: SoundCard[]) {
-    soundCards.forEach(card => {
-      card.runTimeId = this.runTimeId;
-      this.runTimeId++;
-    });
-    this.soundcards.push(...soundCards);
-    this.updateConfig();
-    this.sortSoundCards(this.soundcards);
-  }
 
   editSoundCard(editedSoundCard: SoundCard) {
     let runtimeId = editedSoundCard.runTimeId;
@@ -154,29 +145,8 @@ export class SoundcardService {
       foundCards[0].category = editedSoundCard.category;
       foundCards[0].soundFilePath = editedSoundCard.soundFilePath;
     }
-    this.updateConfig();
+    this.updateSound(editedSoundCard);
     this.updateStreamDeck();
-  }
-
-  deleteSoundCard(soundCard: SoundCard) {
-    console.log("Inside handle Delete")
-    let indexFoundAt = 0;
-
-    for (let [index, card] of this.soundcards.entries()) {
-      if (card.runTimeId == soundCard.runTimeId) {
-        indexFoundAt = index;
-        if (card.showOnStreamDeck) {
-          card.showOnStreamDeck = false;
-          this.showOnStreamDeckChanged(card);
-        }
-        if (card.isCurrentlyPlaying) {
-          this.stopPlaying(card);
-        }
-      }
-    }
-
-    this.soundcards.splice(indexFoundAt, 1);
-    this.updateConfig();
   }
 
   showOnStreamDeckChanged(soundcard: SoundCard) {
@@ -206,5 +176,10 @@ export class SoundcardService {
   updateConfig() {
     console.log("Updating the config with values:", this.soundcards);
     this.settingsService.updateConfig(this.soundcards);
+  }
+
+  updateSound(editedSoundCard: SoundCard){
+    console.log("Updating the sound with values:", editedSoundCard);
+    this.settingsService.updateSound(editedSoundCard);
   }
 }
