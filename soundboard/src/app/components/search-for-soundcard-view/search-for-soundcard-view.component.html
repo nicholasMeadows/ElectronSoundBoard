@@ -1,18 +1,16 @@
 <div>
-    <mat-accordion>
-        <mat-expansion-panel [expanded]="true">
-            <mat-expansion-panel-header>
-                <mat-panel-title>Search Results</mat-panel-title>
-            </mat-expansion-panel-header>
-            <mat-accordion>
-                <div fxLayout="row wrap" fxLayoutGap="10px grid">
-                    <div *ngFor="let soundcard of uiSoundCards" style="margin-bottom: 10px;">
-                        <app-soundcard [soundcard]="soundcard">
-                        </app-soundcard>
-                    </div>
+    <mat-expansion-panel [expanded]="true" *ngFor="let category of getCategories()">
+        <mat-expansion-panel-header>
+            <mat-panel-title>{{category}}</mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-accordion>
+            <div fxLayout="row wrap" fxLayoutGap="10px grid">
+                <div *ngFor="let soundcard of uiSoundCards" style="margin-bottom: 10px;"  [ngStyle]="{'display': soundcard.category == category ? '':'none'}">
+                    <app-soundcard [soundcard]="soundcard">
+                    </app-soundcard>
                 </div>
+            </div>
 
-            </mat-accordion>
-        </mat-expansion-panel>
-    </mat-accordion>
+        </mat-accordion>
+    </mat-expansion-panel>
 </div>

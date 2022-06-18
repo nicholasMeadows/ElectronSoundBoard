@@ -32,4 +32,16 @@ export class SearchForSoundcardViewComponent implements OnInit {
       }
     });
   }
+
+  getCategories() {
+    return this.uiSoundCards.map(soundcard => soundcard.category).filter((value, index, self) => self.indexOf(value) === index)
+      .sort((a, b) => {
+        if (a > b) {
+          return 1;
+        } else if (a < b) {
+          return -1;
+        }
+        return 0;
+      });
+  }
 }
