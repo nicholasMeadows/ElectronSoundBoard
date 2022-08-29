@@ -7,11 +7,15 @@ class CustomWebSocket {
     configUtil;
     startPlayingAudio;
     stopPlayingAudio;
+    playRandomOrStopIfAlreadyPlaying;
+    playRandomHypeSongOrStopIfAlreadyPlaying;
 
-    constructor(configUtil, startPlayingAudio, stopPlayingAudio) {
+    constructor(configUtil, startPlayingAudio, stopPlayingAudio, playRandomOrStopIfAlreadyPlaying, playRandomHypeSongOrStopIfAlreadyPlaying) {
         this.configUtil = configUtil;
         this.startPlayingAudio = startPlayingAudio;
         this.stopPlayingAudio = stopPlayingAudio;
+        this.playRandomOrStopIfAlreadyPlaying = playRandomOrStopIfAlreadyPlaying;
+        this.playRandomHypeSongOrStopIfAlreadyPlaying = playRandomHypeSongOrStopIfAlreadyPlaying;
     }
 
     createWebSocket() {
@@ -41,6 +45,9 @@ class CustomWebSocket {
                     break;
                 case "stopsound": this.stopPlayingAudio(message.data);
                     break;
+                case "playRandomSoundOrStopIfPlaying".toLowerCase(): this.playRandomOrStopIfAlreadyPlaying();
+                    break;
+                case "playRandomHypeSongOrStopIfPlaying".toLowerCase(): this.playRandomHypeSongOrStopIfAlreadyPlaying();
             }
         }
     }

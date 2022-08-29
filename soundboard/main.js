@@ -6,7 +6,7 @@ const { app, BrowserWindow, Menu, ipcMain, IpcMessageEvent, webContents, shell }
 const { pathToFileURL } = require('url');
 
 let configUtil = new ConfigUtil(app.getPath("appData"), app.name, app.getPath("music"));
-let streamDeckWebSocket = new CustomWebSocket(configUtil, startPlayingAudio, stopPlayingAudio);
+let streamDeckWebSocket = new CustomWebSocket(configUtil, startPlayingAudio, stopPlayingAudio, playRandomOrStopIfAlreadyPlaying, playRandomHypeSongOrStopIfAlreadyPlaying);
 
 let audioMenuLabel = 'Audio Devices';
 
@@ -138,8 +138,13 @@ function stopPlayingAudio(soundCard){
   win.webContents.send("streamdeckstopaudio", soundCard);
 }
 
+function playRandomOrStopIfAlreadyPlaying() {
+  win.webContents.send("playRandomOrStopIfAlreadyPlaying", {});
+}
 
-
+function playRandomHypeSongOrStopIfAlreadyPlaying() {
+  win.webContents.send("playRandomHypeSongOrStopIfAlreadyPlaying", {});
+}
 
 //IPC Events!!!
 function playAllClicked() {

@@ -67,6 +67,21 @@ export class IpcService {
     })
   }
 
+  getPlayRandomOrStopIfAlreadyPlaying(): Observable<void> {
+    return new Observable(obs => {
+      this.ipc.on("playRandomOrStopIfAlreadyPlaying", (event, data) => {
+        obs.next();
+      });
+    })
+  }
+  getPlayRandomHypeSongOrStopIfAlreadyPlaying(): Observable<void> {
+    return new Observable(obs => {
+      this.ipc.on("playRandomHypeSongOrStopIfAlreadyPlaying", (event, data) => {
+        obs.next();
+      });
+    })
+  }
+    
   getPlayAllAudio(): Observable<void> {
     return new Observable(obs => {
       this.ipc.on("playAllClicked", (event) => {

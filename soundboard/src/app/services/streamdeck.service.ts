@@ -31,6 +31,22 @@ export class StreamdeckService {
     });
   }
 
+  getPlayRandomOrStopIfAlreadyPlayingSubscription(): Observable<void> {
+    return new Observable<void> (obs => {
+      this.ipcService.getPlayRandomOrStopIfAlreadyPlaying().subscribe(() => {
+        obs.next();
+      })
+    });
+  }
+
+  getPlayRandomHypeSongOrStopIfAlreadyPlayingSubscription(): Observable<void> {
+    return new Observable<void> (obs => {
+      this.ipcService.getPlayRandomHypeSongOrStopIfAlreadyPlaying().subscribe(() => {
+        obs.next();
+      })
+    });
+  }
+
   sendStopPlayingToStreamDeck(soundCard) {
     this.ipcService.sendData("streamdeck:stopplaying", soundCard);
   }

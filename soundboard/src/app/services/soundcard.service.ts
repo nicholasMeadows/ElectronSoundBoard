@@ -38,6 +38,32 @@ export class SoundcardService {
       }
     });
 
+    this.streamDeckService.getPlayRandomOrStopIfAlreadyPlayingSubscription().subscribe(() =>{
+      let playingSoundCards = this.soundcards.filter(sc => sc.isCurrentlyPlaying);
+      if(playingSoundCards.length == 0){
+        this.playRandomSoundCard(1);
+      } else {
+        this.stopPlayingAll();
+      }
+    });
+
+    this.streamDeckService.getPlayRandomHypeSongOrStopIfAlreadyPlayingSubscription().subscribe(() =>{
+      let playingSoundCards = this.soundcards.filter(sc => sc.isCurrentlyPlaying);
+      if(playingSoundCards.length == 0){
+        let hypeSongs = this.soundcards.filter(sound => {
+          return sound.category === "Hype Songs";
+        });
+  
+        const randomHypeSong = hypeSongs[Math.floor(Math.random() * hypeSongs.length)];
+        randomHypeSong.isCurrentlyPlaying = true;
+        this.appRef.tick();
+        this.play(randomHypeSong);
+
+      } else {
+        this.stopPlayingAll();
+      }
+    });
+
     this.audioService.getAudioFinishedSubscription().subscribe(soundCard => {
       soundCard.isCurrentlyPlaying = false;
       this.streamDeckService.sendStopPlayingToStreamDeck(soundCard);
@@ -65,24 +91,11 @@ export class SoundcardService {
     })
 
     this.ipcService.getPlayRandom().subscribe(() => {
-      let randomIndex = this.getRandomNumber(0, this.soundcards.length-1);
-      let soundCard = this.soundcards[randomIndex];
-      soundCard.isCurrentlyPlaying = true;
-      this.play(soundCard);
+      this.playRandomSoundCard(1);
     });
 
     this.ipcService.getPlay10Random().subscribe(() => {
-      let randomIndexes = [];
-      let max = this.soundcards.length -1;
-      for(let i=0; i < 10; ++i){
-        randomIndexes.push(this.getRandomNumber(0,max));
-      }
-
-      randomIndexes.forEach(index => {
-        let soundCard = this.soundcards[index];
-        soundCard.isCurrentlyPlaying = true;
-        this.play(soundCard);
-      })
+      this.playRandomSoundCard(10);
     });
 
     this.ipcService.getPlayEarRape().subscribe(()=> {
@@ -126,6 +139,7 @@ export class SoundcardService {
         this.stopPlaying(card);
       }
     });
+    this.appRef.tick();
   }
 
   volumeChange(soundCard: SoundCard) {
@@ -181,5 +195,19 @@ export class SoundcardService {
   updateSound(editedSoundCard: SoundCard){
     console.log("Updating the sound with values:", editedSoundCard);
     this.settingsService.updateSound(editedSoundCard);
+  }
+
+  playRandomSoundCard(numerOfSoundCardsToPlay: number) {
+    let randomIndexes = [];
+    let max = this.soundcards.length -1;
+    for(let i=0; i < numerOfSoundCardsToPlay; ++i){
+      randomIndexes.push(this.getRandomNumber(0,max));
+    }
+
+    randomIndexes.forEach(index => {
+      let soundCard = this.soundcards[index];
+      soundCard.isCurrentlyPlaying = true;
+      this.play(soundCard);
+    })
   }
 }
