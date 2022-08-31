@@ -38,14 +38,6 @@ export class SoundcardService {
       }
     });
 
-    this.streamDeckService.getPlayRandomOrStopIfAlreadyPlayingSubscription().subscribe(() =>{
-      let playingSoundCards = this.soundcards.filter(sc => sc.isCurrentlyPlaying);
-      if(playingSoundCards.length == 0){
-        this.playRandomSoundCard(1);
-      } else {
-        this.stopPlayingAll();
-      }
-    });
 
     this.streamDeckService.getPlayRandomHypeSongOrStopIfAlreadyPlayingSubscription().subscribe(() =>{
       let playingSoundCards = this.soundcards.filter(sc => sc.isCurrentlyPlaying);
