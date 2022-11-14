@@ -91,6 +91,14 @@ export class IpcService {
     });
   }
 
+  getPlayRandomFromCodLobbyCategory(): Observable<void> {
+    return new Observable(obs => {
+      this.ipc.on("playRandomFromCodLobbyCategoryClicked", (event) => {
+        obs.next();
+      })
+    })
+  }
+
   getPlay10Random(): Observable<void> {
     return new Observable(obs => {
       this.ipc.on("play10RandomClicked", (event) => {

@@ -56,6 +56,23 @@ export class SoundcardService {
       }
     });
 
+    this.streamDeckService.getPlayRandomFromCodLobbyCategory().subscribe(() => {
+      let playingSoundCards = this.soundcards.filter(sc => sc.isCurrentlyPlaying);
+      if(playingSoundCards.length == 0){
+        let hypeSongs = this.soundcards.filter(sound => {
+          return sound.category === "COD Lobby";
+        });
+  
+        const randomHypeSong = hypeSongs[Math.floor(Math.random() * hypeSongs.length)];
+        randomHypeSong.isCurrentlyPlaying = true;
+        this.appRef.tick();
+        this.play(randomHypeSong);
+
+      } else {
+        this.stopPlayingAll();
+      }
+    })
+
     this.audioService.getAudioFinishedSubscription().subscribe(soundCard => {
       soundCard.isCurrentlyPlaying = false;
       this.streamDeckService.sendStopPlayingToStreamDeck(soundCard);

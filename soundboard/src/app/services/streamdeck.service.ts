@@ -39,6 +39,13 @@ export class StreamdeckService {
     });
   }
 
+  getPlayRandomFromCodLobbyCategory(): Observable<void> {
+    return new Observable<void> (obs => {
+      this.ipcService.getPlayRandomFromCodLobbyCategory().subscribe(() => {
+        obs.next();
+      })
+    })
+  }
   sendStopPlayingToStreamDeck(soundCard) {
     this.ipcService.sendData("streamdeck:stopplaying", soundCard);
   }
