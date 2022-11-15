@@ -39,10 +39,10 @@ export class StreamdeckService {
     });
   }
 
-  getPlayRandomFromCodLobbyCategory(): Observable<void> {
-    return new Observable<void> (obs => {
-      this.ipcService.getPlayRandomFromCodLobbyCategory().subscribe(() => {
-        obs.next();
+  getPlayRandomFromSpecifiedCategory(): Observable<string> {
+    return new Observable<string> (obs => {
+      this.ipcService.getPlayRandomFromSpecifiedCategory().subscribe((category) => {
+        obs.next(category);
       })
     })
   }

@@ -56,17 +56,19 @@ export class SoundcardService {
       }
     });
 
-    this.streamDeckService.getPlayRandomFromCodLobbyCategory().subscribe(() => {
+    this.streamDeckService.getPlayRandomFromSpecifiedCategory().subscribe((category) => {
       let playingSoundCards = this.soundcards.filter(sc => sc.isCurrentlyPlaying);
       if(playingSoundCards.length == 0){
-        let hypeSongs = this.soundcards.filter(sound => {
-          return sound.category === "COD Lobby";
+        let soundCards = this.soundcards.filter(sound => {
+          return sound.category === category;
         });
   
-        const randomHypeSong = hypeSongs[Math.floor(Math.random() * hypeSongs.length)];
-        randomHypeSong.isCurrentlyPlaying = true;
-        this.appRef.tick();
-        this.play(randomHypeSong);
+        if(soundCards != undefined && soundCards.length > 0){
+          const randomSound = soundCards[Math.floor(Math.random() * soundCards.length)];
+          randomSound.isCurrentlyPlaying = true;
+          this.appRef.tick();
+          this.play(randomSound);
+        }        
 
       } else {
         this.stopPlayingAll();

@@ -91,10 +91,10 @@ export class IpcService {
     });
   }
 
-  getPlayRandomFromCodLobbyCategory(): Observable<void> {
+  getPlayRandomFromSpecifiedCategory(): Observable<string> {
     return new Observable(obs => {
-      this.ipc.on("playRandomFromCodLobbyCategoryClicked", (event) => {
-        obs.next();
+      this.ipc.on("playRandomFromSpecifiedCategoryClicked", (event, categoryToPlay) => {
+        obs.next(categoryToPlay.category);
       })
     })
   }
