@@ -95,7 +95,7 @@ export class EditSoundcardComponent implements OnInit {
 
     let updateFilePath = filePathSplit.join("\\") + "\\"+ category+"\\"+updatedFileNameWithExtension;
 
-    this.dialogRef.close(new SoundCard(this.soundCard.runTimeId, title, updateFilePath, category, this.soundCard.isFavorite, this.soundCard.showOnStreamDeck, this.soundCard.isCurrentlyPlaying, this.soundCard.currentVolume));
+    this.dialogRef.close(new SoundCard(this.soundCard.runTimeId, title, updateFilePath, category, this.soundCard.isFavorite, this.soundCard.showOnStreamDeck, this.soundCard.isCurrentlyPlaying, this.soundCard.currentVolume, this.soundCard.playOnInGameDevice));
   }
 
   cancleUpdate() {

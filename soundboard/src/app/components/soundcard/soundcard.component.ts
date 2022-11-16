@@ -82,6 +82,11 @@ export class SoundcardComponent implements OnInit {
     this.soundCardService.showOnStreamDeckChanged(this.soundcard);
   }
 
+  playOnInGameDeviceChange(event) {
+    event.stopPropagation();
+    this.soundCardService.playOnInGameDeviceChanges(this.soundcard);
+  }
+
   volumeChanged(event) {
     this.soundCardService.volumeChange(this.soundcard);
   }

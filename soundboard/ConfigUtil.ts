@@ -81,6 +81,12 @@ class ConfigUtil {
         this.writeConfigFile(configObj);
     }
 
+    updateAudioDeviceForInGameChannelIdInConfig(deviceId) {
+        let configObj = this.readConfigFile();
+        configObj.audioDeviceIdForInGameChannel = deviceId;
+        this.writeConfigFile(configObj);
+    }
+    
     readConfigFile() {
         return JSON.parse(fs.readFileSync(this.configFile));
     }

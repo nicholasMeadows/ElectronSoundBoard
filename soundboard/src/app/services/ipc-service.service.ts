@@ -19,6 +19,10 @@ export class IpcService {
           // obs.next(soundCard);
           audioService.updateCurrentDeviceId(deviceId);
         });
+
+        this.ipc.on('audiodevice:updatecurrentdeviceforingamechannel', (event, deviceId) => {
+          audioService.updateCurrentInGameChannelDeviceId(deviceId);
+        });
       } catch (error) {
         throw error;
       }

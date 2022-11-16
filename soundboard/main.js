@@ -9,6 +9,7 @@ let configUtil = new ConfigUtil(app.getPath("appData"), app.name, app.getPath("m
 let streamDeckWebSocket = new CustomWebSocket(configUtil, startPlayingAudio, stopPlayingAudio, streamDeckPlayRandomSound, streamDeckPlayRandomHypeSongOrStopIfAlreadyPlaying, playRandomSoundFromSpecifiedCategory);
 
 let audioMenuLabel = 'Audio Devices';
+let audioForInGameChannelMenuLabel = 'Audio Devices for In Game Channel';
 
 let win;
 
@@ -195,7 +196,8 @@ function cleanAndUpdateConfig(config) {
                 "isFavorite": false,
                 "showOnStreamDeck": false,
                 "isCurrentlyPlaying": false,
-                "currentVolume": 0.8
+                "currentVolume": 0.8,
+                "playOnInGameDevice": false
             }
             config.soundCards.push(soundObjToAdd);
           }
@@ -243,6 +245,19 @@ ipcMain.on("audiodevice:audiodevicelist", (event, args) => {
     })
   });
 
+  let audioDeviceForInGameSoundSubMenu = [];
+  args.forEach(device => {
+    audioDeviceForInGameSoundSubMenu.push({
+      type: 'radio',
+      label: device.deviceName,
+      deviceId: device.deviceId,
+      click() {
+        win.webContents.send("audiodevice:updatecurrentdeviceforingamechannel", device.deviceId);
+        configUtil.updateAudioDeviceForInGameChannelIdInConfig(device.deviceId);
+      }
+    })
+  });
+
   let audioMenuItem = mainMenuTemplate.find((menu, inext) => {
     return menu.label == audioMenuLabel;
   });
@@ -263,6 +278,28 @@ ipcMain.on("audiodevice:audiodevicelist", (event, args) => {
   if(foundDeviceSubMenu.length > 0){
     foundDeviceSubMenu[0].checked=true; 
     win.webContents.send("audiodevice:updatecurrentdevice", configDeviceId);
+  }
+
+  let audioForInGameChannelMenuItem = mainMenuTemplate.find((menu, inext) => {
+    return menu.label == audioForInGameChannelMenuLabel;
+  });
+
+  if (audioForInGameChannelMenuItem) {
+    audioForInGameChannelMenuItem.submenu = audioDeviceForInGameSoundSubMenu;
+  } else {
+    mainMenuTemplate.push({
+      label: audioForInGameChannelMenuLabel,
+      submenu: audioDeviceForInGameSoundSubMenu
+    });
+  }
+  let inGameChannelDeviceId = configUtil.readConfigFile().audioDeviceIdForInGameChannel;
+  let foundInGameChannelDeviceSubMenu = audioDeviceForInGameSoundSubMenu.filter((item, index) => {
+    return item.deviceId == inGameChannelDeviceId;
+  });
+
+  if(foundInGameChannelDeviceSubMenu.length > 0){
+    foundInGameChannelDeviceSubMenu[0].checked=true; 
+    win.webContents.send("audiodevice:updatecurrentdeviceforingamechannel", inGameChannelDeviceId);
   }
   
   const menu = Menu.buildFromTemplate(mainMenuTemplate);

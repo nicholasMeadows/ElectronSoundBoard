@@ -179,6 +179,11 @@ export class SoundcardService {
     this.updateStreamDeck();
   }
 
+  playOnInGameDeviceChanges(soundcard: SoundCard) {
+    this.updateConfig();
+    this.updateStreamDeck();
+  }
+
   getSoundCards(): SoundCard[] {
     return this.soundcards;
   }
