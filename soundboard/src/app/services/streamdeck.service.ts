@@ -46,6 +46,14 @@ export class StreamdeckService {
       })
     })
   }
+
+  getPlaySpecificSoundFromSpecifiedCategory(): Observable<{category: string, sound: string}> {
+    return new Observable(obs => {
+      this.ipcService.getPlaySpecificSoundFromSpecifiedCtegory().subscribe(categorySoundObj => {
+        obs.next(categorySoundObj);
+      })
+    })
+  }
   sendStopPlayingToStreamDeck(soundCard) {
     this.ipcService.sendData("streamdeck:stopplaying", soundCard);
   }

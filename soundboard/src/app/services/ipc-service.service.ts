@@ -103,6 +103,14 @@ export class IpcService {
     })
   }
 
+  getPlaySpecificSoundFromSpecifiedCtegory(): Observable<{category: string, sound: string}> {
+    return new Observable(obs => {
+      this.ipc.on("playSpecificFromSpecifiedCategoryClicked", (event, categorySoundObj) => {
+        obs.next(categorySoundObj);
+      })
+    })
+  }
+
   getPlay10Random(): Observable<void> {
     return new Observable(obs => {
       this.ipc.on("play10RandomClicked", (event) => {

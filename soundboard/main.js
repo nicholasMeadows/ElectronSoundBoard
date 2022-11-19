@@ -6,7 +6,7 @@ const { app, BrowserWindow, Menu, ipcMain, IpcMessageEvent, webContents, shell }
 const { pathToFileURL } = require('url');
 
 let configUtil = new ConfigUtil(app.getPath("appData"), app.name, app.getPath("music"));
-let streamDeckWebSocket = new CustomWebSocket(configUtil, startPlayingAudio, stopPlayingAudio, streamDeckPlayRandomSound, streamDeckPlayRandomHypeSongOrStopIfAlreadyPlaying, playRandomSoundFromSpecifiedCategory);
+let streamDeckWebSocket = new CustomWebSocket(configUtil, startPlayingAudio, stopPlayingAudio, streamDeckPlayRandomSound, streamDeckPlayRandomHypeSongOrStopIfAlreadyPlaying, playRandomSoundFromSpecifiedCategory, playSpeicifSoundFromSpecifiedCategory);
 
 let audioMenuLabel = 'Audio Devices';
 let secondaryAudioMenuLabel = 'Secondary Audio Devices';
@@ -145,6 +145,10 @@ function streamDeckPlayRandomSound() {
 
 function playRandomSoundFromSpecifiedCategory(category) {
   win.webContents.send("playRandomFromSpecifiedCategoryClicked", {category: category});
+}
+
+function playSpeicifSoundFromSpecifiedCategory(category, sound) {
+  win.webContents.send("playSpecificFromSpecifiedCategoryClicked", {category: category, sound: sound});
 }
 
 function streamDeckPlayRandomHypeSongOrStopIfAlreadyPlaying() {

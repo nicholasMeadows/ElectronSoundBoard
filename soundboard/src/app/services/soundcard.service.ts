@@ -75,6 +75,16 @@ export class SoundcardService {
       }
     })
 
+    this.streamDeckService.getPlaySpecificSoundFromSpecifiedCategory().subscribe(categorySoundObj => {
+      let soundCard = this.soundcards.find(soundCard => {
+        return soundCard.category.toLowerCase() == categorySoundObj.category.toLowerCase() && soundCard.title.toLowerCase() == categorySoundObj.sound.toLowerCase()
+      });
+
+      if(soundCard != undefined) {
+          this.play(soundCard);
+      }
+    });
+
     this.audioService.getAudioFinishedSubscription().subscribe(soundCard => {
       soundCard.isCurrentlyPlaying = false;
       this.streamDeckService.sendStopPlayingToStreamDeck(soundCard);

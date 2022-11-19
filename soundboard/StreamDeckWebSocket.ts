@@ -10,14 +10,16 @@ class CustomWebSocket {
     playRandomSound;
     playRandomHypeSongOrStopIfAlreadyPlaying;
     playRandomSoundFromSpecifiedCategory;
+    playSpecificSoundFromSpecifiedCategory;
 
-    constructor(configUtil, startPlayingAudio, stopPlayingAudio, playRandomSound, playRandomHypeSongOrStopIfAlreadyPlaying, playRandomSoundFromSpecifiedCategory) {
+    constructor(configUtil, startPlayingAudio, stopPlayingAudio, playRandomSound, playRandomHypeSongOrStopIfAlreadyPlaying, playRandomSoundFromSpecifiedCategory, playSpecificSoundFromSpecifiedCategory) {
         this.configUtil = configUtil;
         this.startPlayingAudio = startPlayingAudio;
         this.stopPlayingAudio = stopPlayingAudio;
         this.playRandomSound = playRandomSound;
         this.playRandomHypeSongOrStopIfAlreadyPlaying = playRandomHypeSongOrStopIfAlreadyPlaying;
         this.playRandomSoundFromSpecifiedCategory = playRandomSoundFromSpecifiedCategory;
+        this.playSpecificSoundFromSpecifiedCategory = playSpecificSoundFromSpecifiedCategory;
     }
 
     createWebSocket() {
@@ -52,6 +54,9 @@ class CustomWebSocket {
                 case "playRandomHypeSongOrStopIfPlaying".toLowerCase(): this.playRandomHypeSongOrStopIfAlreadyPlaying();
                     break;
                 case "playRandomSoundFromSpecifiedCategory".toLowerCase(): this.playRandomSoundFromSpecifiedCategory(message.data.categoryToPlay);
+                    break;
+                case "playSpecificSoundFromSpecifiedCategory".toLowerCase(): this.playSpecificSoundFromSpecifiedCategory(message.data.categoryToPlay, message.data.soundToPlay);
+                    break;
             }
         }
     }
