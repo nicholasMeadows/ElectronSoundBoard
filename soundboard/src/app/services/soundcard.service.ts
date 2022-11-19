@@ -81,7 +81,15 @@ export class SoundcardService {
       });
 
       if(soundCard != undefined) {
+        if(soundCard.isCurrentlyPlaying){
+          soundCard.isCurrentlyPlaying = false;
+          this.appRef.tick();
+          this.stopPlaying(soundCard);
+        } else {
+          soundCard.isCurrentlyPlaying = true;
+          this.appRef.tick();
           this.play(soundCard);
+        }        
       }
     });
 
