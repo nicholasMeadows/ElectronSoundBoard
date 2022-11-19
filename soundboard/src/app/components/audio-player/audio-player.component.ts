@@ -11,7 +11,7 @@ import { DOCUMENT } from '@angular/common';
 })
 export class AudioPlayerComponent implements OnInit {
   audioPlayers: Map<String, Map<number, HTMLAudioElement>> = new Map();
-  inGameChannelAudioPlayers: Map<String, Map<number, HTMLAudioElement>> = new Map();
+  secondaryAudioPlayers: Map<String, Map<number, HTMLAudioElement>> = new Map();
 
   constructor(private ipcService: IpcService, private audioService: AudioService, @Inject(DOCUMENT) private document: Document) {
   }
@@ -22,7 +22,7 @@ export class AudioPlayerComponent implements OnInit {
     this.getAudioStartPlayingObs();
     this.getAudioStopPlayingObs();
     this.getUpdateDeviceIdObs();
-    this.getUpdateDeviceIdForInGameChannelObs();
+    this.getUpdateSecondaryAudioDeviceIdObs();
   }
 
   getUpdateDeviceIdObs(): void {
@@ -45,9 +45,9 @@ export class AudioPlayerComponent implements OnInit {
     });
   }
 
-  getUpdateDeviceIdForInGameChannelObs(): void {
-    this.audioService.getUpdateAudioDeviceIdForInGameChannelSubscription().subscribe(deviceId => {
-      this.inGameChannelAudioPlayers.forEach((instanceMap, runtimeId) => {
+  getUpdateSecondaryAudioDeviceIdObs(): void {
+    this.audioService.getUpdateSecondaryAudioDeviceIdSubscription().subscribe(deviceId => {
+      this.secondaryAudioPlayers.forEach((instanceMap, runtimeId) => {
         instanceMap.forEach((audioPlayer, instanceNumber) => {
           (audioPlayer as any).setInkId(deviceId);
         })
@@ -71,9 +71,9 @@ export class AudioPlayerComponent implements OnInit {
         })
       }
 
-      let inGameAudioPlayerInstancesMap = this.inGameChannelAudioPlayers.get(soundcardRuntimeId);
-      if(inGameAudioPlayerInstancesMap) {
-        inGameAudioPlayerInstancesMap.forEach((audioPlayer, instanceNumber) => {
+      let secondaryAudioPLayerInstancesMap = this.secondaryAudioPlayers.get(soundcardRuntimeId);
+      if(secondaryAudioPLayerInstancesMap) {
+        secondaryAudioPLayerInstancesMap.forEach((audioPlayer, instanceNumber) => {
           audioPlayer.volume = soundCard.currentVolume;
         })
       }
@@ -82,92 +82,61 @@ export class AudioPlayerComponent implements OnInit {
 
   getAudioStartPlayingObs() {
     this.audioService.getAudioStartPlayingSubscription().subscribe(soundCard => {
-      let soundCardRuntimeId = soundCard.runTimeId.toString();
-      let audioInstancesMap = this.audioPlayers.get(soundCardRuntimeId);
-      if (!audioInstancesMap) {
-        audioInstancesMap = new Map();
-        this.audioPlayers.set(soundCardRuntimeId, audioInstancesMap);
+      if(soundCard.playOnPrimaryAudio) {
+        this.startPlayingAudio(soundCard, this.audioPlayers, this.audioService.currentDeviceId);
       }
 
-      let inGameAudioInstancesMap;
-      if(soundCard.playOnInGameDevice) {
-        inGameAudioInstancesMap = this.inGameChannelAudioPlayers.get(soundCardRuntimeId);
-        if(!inGameAudioInstancesMap) {
-          inGameAudioInstancesMap = new Map();
-          this.inGameChannelAudioPlayers.set(soundCardRuntimeId, inGameAudioInstancesMap);
-        }
+      if(soundCard.playOnSecondaryAudio) {
+        this.startPlayingAudio(soundCard, this.secondaryAudioPlayers, this.audioService.currentSecondaryAudioId);
       }
-
-      let instanceNumber = 0;
-      audioInstancesMap.forEach((audioPlayer, playerInstance)=> {
-        if(instanceNumber <= playerInstance){
-          instanceNumber = playerInstance+1;
-        }
-      });
-
-      let inGameinstanceNumber = 0;
-      if(soundCard.playOnInGameDevice) {
-        inGameAudioInstancesMap.forEach((audioPlayer, playerInstance)=> {
-          if(inGameinstanceNumber <= playerInstance){
-            inGameinstanceNumber = playerInstance+1;
-          }
-        });
-      }
-
-      let audioPlr = this.document.createElement('audio');
-      audioPlr.src = soundCard.soundFilePath;
-      audioPlr.volume = soundCard.currentVolume;
-      (audioPlr as any).setSinkId(this.audioService.currentDeviceId);
-      audioInstancesMap.set(instanceNumber, audioPlr);
-      audioPlr.addEventListener("ended", () => {
-        this.onAudioFinished(soundCard, soundCardRuntimeId, instanceNumber, false);
-      })
-
-      if(soundCard.playOnInGameDevice) {
-        let inGameAudioPlr = this.document.createElement('audio');
-        inGameAudioPlr.src = soundCard.soundFilePath;
-        inGameAudioPlr.volume = soundCard.currentVolume;
-        (inGameAudioPlr as any).setSinkId(this.audioService.currentDeviceIdForInGameChannel);
-        inGameAudioInstancesMap.set(inGameinstanceNumber, inGameAudioPlr);
-
-        inGameAudioPlr.addEventListener("ended", () => {
-          this.onAudioFinished(soundCard, soundCardRuntimeId, inGameinstanceNumber, true);
-        })
-        inGameAudioPlr.play();
-      }
-      audioPlr.play();      
     });
   }
 
+  startPlayingAudio(soundCard: SoundCard, audioPlayersMap: Map<String, Map<number, HTMLAudioElement>>, audioDeviceId: string) {
+    let soundCardRuntimeId = soundCard.runTimeId.toString();
+    let audioInstancesMap = audioPlayersMap.get(soundCardRuntimeId);
+    if (!audioInstancesMap) {
+      audioInstancesMap = new Map();
+      audioPlayersMap.set(soundCardRuntimeId, audioInstancesMap);
+    }
+    let instanceNumber = 0;
+    audioInstancesMap.forEach((audioPlayer, playerInstance)=> {
+      if(instanceNumber <= playerInstance){
+        instanceNumber = playerInstance+1;
+      }
+    });
+
+    let audioPlr = this.document.createElement('audio');
+    audioPlr.src = soundCard.soundFilePath;
+    audioPlr.volume = soundCard.currentVolume;
+    (audioPlr as any).setSinkId(audioDeviceId);
+    audioInstancesMap.set(instanceNumber, audioPlr);
+    audioPlr.addEventListener("ended", () => {
+      this.onAudioFinished(soundCard, soundCardRuntimeId, instanceNumber, audioPlayersMap);
+    })
+    audioPlr.play();
+  }
+  
   getAudioStopPlayingObs() {
     this.audioService.getAudioStopPlayingSubscription().subscribe(soundcard => {
-      let soundcardRuntimeId = soundcard.runTimeId.toString();
-      let instancesMap = this.audioPlayers.get(soundcardRuntimeId);
+      this.audioStopPlaying(soundcard, this.audioPlayers);
+      this.audioStopPlaying(soundcard, this.secondaryAudioPlayers);
+    });
+  }
+
+  audioStopPlaying(soundcard: SoundCard, audioPlayers: Map<String, Map<number, HTMLAudioElement>>) {
+    let soundcardRuntimeId = soundcard.runTimeId.toString();
+    let instancesMap = audioPlayers.get(soundcardRuntimeId);
+    if(instancesMap != undefined) {
       instancesMap.forEach((audioPlayer, instanceNumber) => {
         audioPlayer.pause();
       });
-      this.audioPlayers.delete(soundcardRuntimeId);
-
-      let inGameAudioInstancesMap = this.inGameChannelAudioPlayers.get(soundcardRuntimeId);
-      if(inGameAudioInstancesMap != undefined) {
-        inGameAudioInstancesMap.forEach((audioPlayer, instanceNumber) => {
-          audioPlayer.pause();
-        })
-        this.inGameChannelAudioPlayers.delete(soundcardRuntimeId);
-      }            
-      
-    });
+      audioPlayers.delete(soundcardRuntimeId);
+    }           
   }
 
   //Tied to onfinished of audio tag
-  onAudioFinished(sound: SoundCard, soundcardRuntimeId: string, instanceNumber: number, isInGameAudioPlayer: boolean) {
-    let audioPlayers: Map<String, Map<number, HTMLAudioElement>>;
-    if(isInGameAudioPlayer) {
-      audioPlayers = this.inGameChannelAudioPlayers;
-    } else {
-      audioPlayers = this.audioPlayers;
-    }
-
+  onAudioFinished(sound: SoundCard, soundcardRuntimeId: string, instanceNumber: number, audioPlayers: Map<String, Map<number, HTMLAudioElement>>) {
     let audioPlayerInstances = audioPlayers.get(soundcardRuntimeId);
     audioPlayerInstances.delete(instanceNumber);
     if(audioPlayerInstances.size == 0) {
@@ -175,9 +144,8 @@ export class AudioPlayerComponent implements OnInit {
     }
 
     let audioInstances = this.audioPlayers.get(soundcardRuntimeId);
-    let inGameAudioInstances = this.inGameChannelAudioPlayers.get(soundcardRuntimeId);
-    console.log('audioInstances', audioInstances, 'inGameAudioInstances', inGameAudioInstances, 'isInGameAudioPlayer', isInGameAudioPlayer);
-    if(audioInstances == undefined && inGameAudioInstances == undefined){
+    let secondaryAudioInstances = this.secondaryAudioPlayers.get(soundcardRuntimeId);
+    if(audioInstances == undefined && secondaryAudioInstances == undefined){
       this.audioService.audioFinished(sound);
     }
   }  

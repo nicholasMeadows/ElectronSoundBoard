@@ -20,8 +20,8 @@ export class IpcService {
           audioService.updateCurrentDeviceId(deviceId);
         });
 
-        this.ipc.on('audiodevice:updatecurrentdeviceforingamechannel', (event, deviceId) => {
-          audioService.updateCurrentInGameChannelDeviceId(deviceId);
+        this.ipc.on('audiodevice:updatecurrentdeviceforsecondaryaudio', (event, deviceId) => {
+          audioService.updateCurrentSecondaryAudioDeviceId(deviceId);
         });
       } catch (error) {
         throw error;

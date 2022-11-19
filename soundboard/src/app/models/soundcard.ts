@@ -7,10 +7,11 @@ export class SoundCard{
     showOnStreamDeck: boolean;
     isCurrentlyPlaying: boolean;
     currentVolume: number;
-    playOnInGameDevice: boolean;
+    playOnPrimaryAudio: boolean;
+    playOnSecondaryAudio: boolean
 
     
-    constructor(runTimeId: number,title: string, soundFilePath: string, category: string, isFavorite: boolean, showOnStreamDeck: boolean, isCurrentlyPlaying: boolean, currentVolume: number, playOnInGameDevice: boolean){
+    constructor(runTimeId: number,title: string, soundFilePath: string, category: string, isFavorite: boolean, showOnStreamDeck: boolean, isCurrentlyPlaying: boolean, currentVolume: number, playOnPrimaryAudio: boolean, playOnSecondaryAudio: boolean){
         this.runTimeId = runTimeId;
         this.title = title;
         this.soundFilePath = soundFilePath;
@@ -19,6 +20,8 @@ export class SoundCard{
         this.showOnStreamDeck = showOnStreamDeck;
         this.isCurrentlyPlaying = isCurrentlyPlaying;
         this.currentVolume = currentVolume;
-        this.playOnInGameDevice = playOnInGameDevice;
+        this.playOnPrimaryAudio = playOnPrimaryAudio;
+        this.playOnSecondaryAudio = playOnSecondaryAudio;
+        
     }
 }

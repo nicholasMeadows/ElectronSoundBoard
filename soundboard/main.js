@@ -9,7 +9,7 @@ let configUtil = new ConfigUtil(app.getPath("appData"), app.name, app.getPath("m
 let streamDeckWebSocket = new CustomWebSocket(configUtil, startPlayingAudio, stopPlayingAudio, streamDeckPlayRandomSound, streamDeckPlayRandomHypeSongOrStopIfAlreadyPlaying, playRandomSoundFromSpecifiedCategory);
 
 let audioMenuLabel = 'Audio Devices';
-let audioForInGameChannelMenuLabel = 'Audio Devices for In Game Channel';
+let secondaryAudioMenuLabel = 'Secondary Audio Devices';
 
 let win;
 
@@ -189,15 +189,16 @@ function cleanAndUpdateConfig(config) {
             let fileNameWithoutExtension = fileNameWithExtension.substring(0,fileNameWithExtension.length -4);
 
             let soundObjToAdd = {
-                "runTimeId": 0,
-                "title": fileNameWithoutExtension,
-                "soundFilePath": completeFile,
-                "category": dirSplit[dirSplit.length-2],
-                "isFavorite": false,
-                "showOnStreamDeck": false,
-                "isCurrentlyPlaying": false,
-                "currentVolume": 0.8,
-                "playOnInGameDevice": false
+              "runTimeId": 0,
+              "title": fileNameWithoutExtension,
+              "soundFilePath": completeFile,
+              "category": dirSplit[dirSplit.length - 2],
+              "isFavorite": false,
+              "showOnStreamDeck": false,
+              "isCurrentlyPlaying": false,
+              "currentVolume": 0.8,
+              "playOnPrimaryAudio": true,
+              "playOnSecondaryAudio": false
             }
             config.soundCards.push(soundObjToAdd);
           }
@@ -245,15 +246,16 @@ ipcMain.on("audiodevice:audiodevicelist", (event, args) => {
     })
   });
 
-  let audioDeviceForInGameSoundSubMenu = [];
+  let secondaryAudioDeviceSubMenu = [];
+
   args.forEach(device => {
-    audioDeviceForInGameSoundSubMenu.push({
+    secondaryAudioDeviceSubMenu.push({
       type: 'radio',
       label: device.deviceName,
       deviceId: device.deviceId,
       click() {
-        win.webContents.send("audiodevice:updatecurrentdeviceforingamechannel", device.deviceId);
-        configUtil.updateAudioDeviceForInGameChannelIdInConfig(device.deviceId);
+        win.webContents.send("audiodevice:updatecurrentdeviceforsecondaryaudio", device.deviceId);
+        configUtil.updateSecondaryAudioDeviceIdInConfig(device.deviceId);
       }
     })
   });
@@ -280,26 +282,26 @@ ipcMain.on("audiodevice:audiodevicelist", (event, args) => {
     win.webContents.send("audiodevice:updatecurrentdevice", configDeviceId);
   }
 
-  let audioForInGameChannelMenuItem = mainMenuTemplate.find((menu, inext) => {
-    return menu.label == audioForInGameChannelMenuLabel;
+  let secondaryAudioMenuItem = mainMenuTemplate.find((menu, inext) => {
+    return menu.label == secondaryAudioMenuLabel;
   });
 
-  if (audioForInGameChannelMenuItem) {
-    audioForInGameChannelMenuItem.submenu = audioDeviceForInGameSoundSubMenu;
+  if (secondaryAudioMenuItem) {
+    secondaryAudioMenuItem.submenu = secondaryAudioDeviceSubMenu;
   } else {
     mainMenuTemplate.push({
-      label: audioForInGameChannelMenuLabel,
-      submenu: audioDeviceForInGameSoundSubMenu
+      label: secondaryAudioMenuLabel,
+      submenu: secondaryAudioDeviceSubMenu
     });
   }
-  let inGameChannelDeviceId = configUtil.readConfigFile().audioDeviceIdForInGameChannel;
-  let foundInGameChannelDeviceSubMenu = audioDeviceForInGameSoundSubMenu.filter((item, index) => {
-    return item.deviceId == inGameChannelDeviceId;
+  let secondaryAudioDeviceId = configUtil.readConfigFile().secondaryAudioDeviceId;
+  let foundSecondaryAudioDeviceSubMenu = secondaryAudioDeviceSubMenu.filter((item, index) => {
+    return item.deviceId == secondaryAudioDeviceId;
   });
 
-  if(foundInGameChannelDeviceSubMenu.length > 0){
-    foundInGameChannelDeviceSubMenu[0].checked=true; 
-    win.webContents.send("audiodevice:updatecurrentdeviceforingamechannel", inGameChannelDeviceId);
+  if(foundSecondaryAudioDeviceSubMenu.length > 0){
+    foundSecondaryAudioDeviceSubMenu[0].checked=true; 
+    win.webContents.send("audiodevice:updatecurrentdeviceforsecondaryaudio", secondaryAudioDeviceId);
   }
   
   const menu = Menu.buildFromTemplate(mainMenuTemplate);

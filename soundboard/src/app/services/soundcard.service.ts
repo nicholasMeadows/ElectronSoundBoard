@@ -179,7 +179,12 @@ export class SoundcardService {
     this.updateStreamDeck();
   }
 
-  playOnInGameDeviceChanges(soundcard: SoundCard) {
+  playOnPrimaryAudioChanged(soundcard: SoundCard){
+    this.updateConfig();
+    this.updateStreamDeck();
+  }
+
+  playOnSecondaryAudioChanged(soundcard: SoundCard) {
     this.updateConfig();
     this.updateStreamDeck();
   }

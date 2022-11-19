@@ -11,14 +11,14 @@ import { AudioDevice } from '../models/audiodevice';
 })
 export class AudioService {
   currentDeviceId: string;
-  currentDeviceIdForInGameChannel: string;
+  currentSecondaryAudioId: string;
 
   audioFinishedSubscription: Subscriber<SoundCard>;
   audioVolumeChangedSubscrition: Subscriber<SoundCard>;
   audioStopPlayingSubscription: Subscriber<SoundCard>;
   audioStartPlayingSubscription: Subscriber<SoundCard>;
   updateAudioDeviceIdSubscription: Subscriber<string>;
-  updateAudioDeviceIdForInGameChannel: Subscriber<string>;
+  updateSecondaryAudioDeviceId: Subscriber<string>;
 
 
   // constructor() {
@@ -74,9 +74,9 @@ export class AudioService {
     });
   }
 
-  getUpdateAudioDeviceIdForInGameChannelSubscription(): Observable<string> {
+  getUpdateSecondaryAudioDeviceIdSubscription(): Observable<string> {
     return new Observable(obs => {
-      this.updateAudioDeviceIdForInGameChannel = obs;
+      this.updateSecondaryAudioDeviceId = obs;
     })
   }
 
@@ -118,8 +118,8 @@ export class AudioService {
     this.updateAudioDeviceIdSubscription.next(this.currentDeviceId);
   }
 
-  updateCurrentInGameChannelDeviceId(deviceId: string) {
-    this.currentDeviceIdForInGameChannel = deviceId;
-    this.updateAudioDeviceIdForInGameChannel.next(this.currentDeviceIdForInGameChannel);
+  updateCurrentSecondaryAudioDeviceId(deviceId: string) {
+    this.currentSecondaryAudioId = deviceId;
+    this.updateSecondaryAudioDeviceId.next(this.currentSecondaryAudioId);
   }
 }
