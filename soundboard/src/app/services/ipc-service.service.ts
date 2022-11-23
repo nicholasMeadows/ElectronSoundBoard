@@ -70,6 +70,14 @@ export class IpcService {
       });
     })
   }
+  
+  getStreamDeckStopAllAudio(): Observable<void> {
+    return new Observable(obs => {
+      this.ipc.on("stopAllSounds", (event, data) => {
+        obs.next();
+      });
+    })
+  }
 
   getPlayRandomHypeSongOrStopIfAlreadyPlaying(): Observable<void> {
     return new Observable(obs => {

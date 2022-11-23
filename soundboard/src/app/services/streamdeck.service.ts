@@ -31,6 +31,14 @@ export class StreamdeckService {
     });
   }
 
+  getStreamDeckStopAllAudioSubscription(): Observable<void> {
+    return new Observable<void> (obs => {
+      this.ipcService.getStreamDeckStopAllAudio().subscribe(() => {
+        obs.next();
+      })
+    })
+  }
+
   getPlayRandomHypeSongOrStopIfAlreadyPlayingSubscription(): Observable<void> {
     return new Observable<void> (obs => {
       this.ipcService.getPlayRandomHypeSongOrStopIfAlreadyPlaying().subscribe(() => {

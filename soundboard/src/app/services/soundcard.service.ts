@@ -38,6 +38,9 @@ export class SoundcardService {
       }
     });
 
+    this.streamDeckService.getStreamDeckStopAllAudioSubscription().subscribe(() => {
+      this.stopPlayingAll();
+    });
 
     this.streamDeckService.getPlayRandomHypeSongOrStopIfAlreadyPlayingSubscription().subscribe(() =>{
       let playingSoundCards = this.soundcards.filter(sc => sc.isCurrentlyPlaying);
@@ -81,15 +84,15 @@ export class SoundcardService {
       });
 
       if(soundCard != undefined) {
-        if(soundCard.isCurrentlyPlaying){
-          soundCard.isCurrentlyPlaying = false;
-          this.appRef.tick();
-          this.stopPlaying(soundCard);
-        } else {
+        // if(soundCard.isCurrentlyPlaying){
+        //   soundCard.isCurrentlyPlaying = false;
+        //   this.appRef.tick();
+        //   this.stopPlaying(soundCard);
+        // } else {
           soundCard.isCurrentlyPlaying = true;
           this.appRef.tick();
           this.play(soundCard);
-        }        
+        // }        
       }
     });
 
