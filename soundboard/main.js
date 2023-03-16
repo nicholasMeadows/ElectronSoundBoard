@@ -4,6 +4,9 @@ const ConfigUtil = require('./ConfigUtil.ts');
 let fs = require('fs');
 const { app, BrowserWindow, Menu, ipcMain, IpcMessageEvent, webContents, shell } = require('electron');
 const { pathToFileURL } = require('url');
+const express = require('express')
+const expressApp = express();
+const port = 6036;
 
 let configUtil = new ConfigUtil(app.getPath("appData"), app.name, app.getPath("music"));
 let streamDeckWebSocket = new CustomWebSocket(configUtil, startPlayingAudio, stopPlayingAudio, streamDeckPlayRandomSound, streamDeckPlayRandomHypeSongOrStopIfAlreadyPlaying, playRandomSoundFromSpecifiedCategory, playSpeicifSoundFromSpecifiedCategory, stopAllSounds);
@@ -336,4 +339,40 @@ ipcMain.on("streamdeck:startplaying", (event, soundCard)=>{
 });
 ipcMain.on("streamdeck:stopplaying", (event, soundCard)=>{
   streamDeckWebSocket.soundStoppedPlaying(soundCard);
+});
+
+expressApp.get('/categories', (req, res) => {
+  let config = configUtil.readConfigFile();
+  let body = {
+    categories:[]
+  }
+
+  config.soundCards.forEach(card => {
+    let category = card.category;
+    if(!body.categories.includes(category)) {
+      body.categories.push(category);
+    }
+  });
+  res.send(body);
+});
+
+expressApp.get('/sounds/:category', (req, res) => {
+  let config = configUtil.readConfigFile();
+  let body = {
+    sounds:[]
+  }
+
+  let categoryToGet = req.params.category;
+
+  config.soundCards.forEach(card => {
+    let category = card.category;
+    if(categoryToGet == category) {
+      body.sounds.push(card.title);
+    }
+  });
+  res.send(body);
+});
+
+expressApp.listen(port, () => {
+  console.log('express started on port '+ port);
 });
